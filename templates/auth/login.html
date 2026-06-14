@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login Perpustakaan</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/login.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+    <div class="left">
+
+        <div class="logo-area">
+
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo">
+
+            <div>
+                <h3>PERPUSTAKAAN</h3>
+                <span>SMA AL IRSYAD TEGAL</span>
+            </div>
+
+        </div>
+
+        <div class="quote">
+
+            <h1>
+                Buku adalah jendela dunia.
+                Membaca adalah kunci untuk
+                membuka dunia.
+            </h1>
+
+            <div class="line"></div>
+
+        </div>
+
+        <img
+        class="library-image"
+        src="{{ url_for('static', filename='images/background.jpeg') }}"
+        alt="Library">
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="right">
+
+        <div class="login-card">
+
+            <div class="icon">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+
+            <h2>Selamat Datang!</h2>
+
+            <p>
+                Masuk untuk mengakses koleksi buku
+                dan layanan perpustakaan.
+            </p>
+
+            <!-- Pesan Login -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form Login -->
+            <form action="/proses_login" method="POST">
+
+                <label>Email</label>
+
+                <input
+                type="email"
+                name="email"
+                placeholder="Masukkan email Anda"
+                required>
+
+                <label>Password</label>
+
+                <input
+                type="password"
+                name="password"
+                placeholder="Masukkan password Anda"
+                required>
+
+                <div class="options">
+
+                    <label>
+                        <input type="checkbox" name="ingat_saya">
+                        Ingat Saya
+                    </label>
+
+                    <a href="#">
+                        Lupa Password?
+                    </a>
+
+                </div>
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="divider">
+                Belum punya akun?
+            </div>
+
+            <button
+            class="register"
+            onclick="window.location.href='/register'">
+                Register di sini
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

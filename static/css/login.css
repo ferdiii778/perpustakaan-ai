@@ -1,0 +1,331 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.container{
+    width:1200px;
+    height:700px;
+
+    background:#dce9ff;
+
+    display:flex;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+/* Dekorasi Lingkaran */
+
+.container::before{
+    content:"";
+
+    position:absolute;
+
+    top:-180px;
+    left:180px;
+
+    width:350px;
+    height:350px;
+
+    background:#c9dbff;
+
+    border-radius:50%;
+
+    z-index:0;
+}
+
+.container::after{
+    content:"";
+
+    position:absolute;
+
+    bottom:-120px;
+    right:-120px;
+
+    width:300px;
+    height:300px;
+
+    background:#bdd4ff;
+
+    border-radius:50%;
+
+    z-index:0;
+}
+
+/* LEFT */
+
+.left{
+    width:55%;
+
+    position:relative;
+
+    padding:35px 40px;
+
+    z-index:2;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo-area img{
+    width:45px;
+    height:auto;
+}
+
+.logo-area h3{
+    font-size:18px;
+    color:#1f2937;
+}
+
+.logo-area span{
+    font-size:12px;
+    color:#6b7280;
+}
+
+/* Quote */
+
+.quote{
+    margin-top:50px;
+    width:330px;
+}
+
+.quote h1{
+    font-size:26px;
+    line-height:1.2;
+    font-weight:500;
+    color:#1f2937;
+}
+
+.line{
+    width:35px;
+    height:4px;
+
+    background:#2563eb;
+
+    margin-top:15px;
+
+    border-radius:10px;
+}
+
+/* Gambar Perpustakaan */
+
+.library-image{
+    position:absolute;
+
+    left:0;
+    bottom:0;
+
+    width:430px;
+
+    z-index:2;
+}
+
+/* Gelombang Tengah */
+
+.wave{
+    position:absolute;
+
+    left:32%;
+    top:-80px;
+
+    width:380px;
+    height:900px;
+
+    background:#cfe0ff;
+
+    border-radius:50%;
+
+    z-index:1;
+}
+
+/* Titik Dekorasi */
+
+.dots{
+    position:absolute;
+
+    top:50px;
+    right:70px;
+
+    color:#7da9ff;
+
+    font-size:10px;
+
+    letter-spacing:10px;
+
+    line-height:18px;
+
+    z-index:2;
+}
+
+/* RIGHT */
+
+.right{
+    width:45%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:2;
+}
+
+.login-card{
+    width:380px;
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:40px;
+
+    box-shadow:none;
+}
+
+.icon{
+    text-align:center;
+
+    font-size:32px;
+
+    color:#2563eb;
+
+    margin-bottom:20px;
+}
+
+.login-card h2{
+    text-align:center;
+
+    margin-bottom:10px;
+
+    font-size:20px;
+}
+
+.login-card p{
+    text-align:center;
+
+    color:#666;
+
+    font-size:13px;
+
+    margin-bottom:25px;
+}
+
+.login-card label{
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:13px;
+
+    color:#374151;
+}
+
+.login-card input[type=email],
+.login-card input[type=password]{
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    margin-bottom:15px;
+}
+
+.options{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+    font-size:12px;
+}
+
+.options a{
+    text-decoration:none;
+
+    color:#2563eb;
+}
+
+button{
+    width:100%;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+}
+
+button[type=submit]{
+    background:#2563eb;
+
+    color:white;
+}
+
+.register{
+    margin-top:15px;
+
+    background:white;
+
+    border:1px solid #2563eb;
+
+    color:#2563eb;
+}
+
+.divider{
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#888;
+
+    font-size:12px;
+}
+
+/* Responsive */
+
+@media(max-width:1200px){
+
+    .container{
+        width:95%;
+    }
+
+}
+
+@media(max-width:900px){
+
+    .left{
+        display:none;
+    }
+
+    .right{
+        width:100%;
+    }
+
+}

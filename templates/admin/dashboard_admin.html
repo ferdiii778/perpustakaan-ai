@@ -1,0 +1,208 @@
+{% extends 'base/base_admin.html' %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="page-header">
+        <div>
+            <h2>Dashboard Admin</h2>
+            <p>Selamat datang di sistem administrasi perpustakaan.</p>
+        </div>
+    </div>
+
+    <!-- STAT CARD -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h4>Total Buku</h4>
+            <h2>1.248</h2>
+            <span>+12 bulan ini</span>
+        </div>
+
+        <div class="stat-card">
+            <h4>Total Anggota</h4>
+            <h2>856</h2>
+            <span>+18 bulan ini</span>
+        </div>
+
+        <div class="stat-card">
+            <h4>Peminjaman Aktif</h4>
+            <h2>128</h2>
+            <span>+8 bulan ini</span>
+        </div>
+
+        <div class="stat-card">
+            <h4>Total Peminjaman</h4>
+            <h2>542</h2>
+            <span>+32 bulan ini</span>
+        </div>
+
+        <div class="stat-card">
+            <h4>Buku Terlambat</h4>
+            <h2>15</h2>
+            <span>-3 bulan ini</span>
+        </div>
+
+    </div>
+
+    <!-- CHART SECTION -->
+
+    <div class="chart-grid">
+
+        <div class="chart-card">
+            <h3>Statistik Peminjaman</h3>
+
+            <canvas id="lineChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Peminjaman Berdasarkan Kategori</h3>
+
+            <canvas id="pieChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- TABLE SECTION -->
+
+    <div class="bottom-grid">
+
+        <div class="table-card">
+
+            <h3>Peminjaman Terbaru</h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Buku</th>
+                        <th>Anggota</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>1</td>
+                        <td>Atomic Habits</td>
+                        <td>Ahmad</td>
+                        <td><span class="badge">Dipinjam</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>Laut Bercerita</td>
+                        <td>Siti</td>
+                        <td><span class="badge">Dipinjam</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td>1984</td>
+                        <td>Rizky</td>
+                        <td><span class="badge success">Kembali</span></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="small-card">
+
+            <h3>Buku Terpopuler</h3>
+
+            <ul>
+                <li>Atomic Habits</li>
+                <li>Laut Bercerita</li>
+                <li>1984</li>
+                <li>Sapiens</li>
+                <li>The Psychology of Money</li>
+            </ul>
+
+        </div>
+
+        <div class="small-card">
+
+            <h3>Aktivitas Sistem</h3>
+
+            <ul>
+                <li>Buku baru ditambahkan</li>
+                <li>Anggota baru bergabung</li>
+                <li>Peminjaman baru</li>
+                <li>Pengembalian buku</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(document.getElementById('lineChart'), {
+
+    type: 'line',
+
+    data: {
+
+        labels: [
+            'Des',
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr'
+        ],
+
+        datasets: [
+
+        {
+            label:'Peminjaman',
+            data:[40,55,60,75,65],
+            tension:0.4
+        },
+
+        {
+            label:'Pengembalian',
+            data:[20,30,35,60,55],
+            tension:0.4
+        }
+
+        ]
+    }
+
+});
+
+new Chart(document.getElementById('pieChart'), {
+
+    type:'doughnut',
+
+    data:{
+
+        labels:[
+            'Fiksi',
+            'Non Fiksi',
+            'Pengembangan Diri',
+            'Sejarah'
+        ],
+
+        datasets:[{
+
+            data:[35,25,20,20]
+
+        }]
+    }
+
+});
+
+</script>
+
+{% endblock %}

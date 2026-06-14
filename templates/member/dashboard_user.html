@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard Perpustakaan
+{% endblock %}
+
+{% block content %}
+
+<main class="main-content">
+
+    <header>
+
+        <div>
+            <p class="eyebrow">Selamat datang kembali</p>
+            <h1>Halo, {{ nama }} 👋</h1>
+        </div>
+
+        <div class="header-actions">
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                type="text"
+                placeholder="Cari buku, penulis, atau kategori...">
+            </div>
+
+            <button class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+                <span class="badge"></span>
+            </button>
+
+            <div class="user">
+
+                <img
+                src="https://ui-avatars.com/api/?name={{ nama }}&background=1E5FBF&color=fff"
+                width="40">
+
+                <span>{{ nama }}</span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- BUKU TERBARU -->
+
+    <section>
+
+        <div class="section-header">
+
+            <h2>Koleksi Buku</h2>
+
+            <a href="{{ url_for('kelola_buku') }}">
+                Lihat Semua
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+        <div class="books">
+
+            {% if buku %}
+
+                {% for b in buku %}
+
+                <div class="book-card">
+
+                    <div class="book-cover">
+
+                        {% if b[10] %}
+
+                        <img
+                        src="{{ url_for('static',
+                        filename='images/books/' + b[10]) }}"
+                        alt="{{ b[1] }}">
+
+                        {% else %}
+
+                        <img
+                        src="https://via.placeholder.com/300x450?text=No+Cover"
+                        alt="No Cover">
+
+                        {% endif %}
+
+                        <span class="book-tag">
+                            {{ b[7] }}
+                        </span>
+
+                    </div>
+
+                    <div class="book-info">
+
+                        <h4>{{ b[1] }}</h4>
+
+                        <p>{{ b[2] }}</p>
+
+                        <a
+                        href="{{ url_for('detail_buku', id=b[0]) }}"
+                        class="btn-detail">
+
+                            Lihat Detail
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-book">
+
+                    <i class="fa-solid fa-book"></i>
+
+                    <h3>Belum Ada Buku</h3>
+
+                    <p>
+                        Silakan tambahkan buku terlebih dahulu
+                        melalui menu Kelola Buku.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- RIGHT PANEL -->
+
+<aside class="right-panel">
+
+    <div class="card card--summary">
+
+        <h3>Ringkasan Peminjaman</h3>
+
+        <div class="summary-item">
+            <strong>{{ total_buku }}</strong>
+            <span>Total Buku</span>
+        </div>
+
+        <div class="summary-item">
+            <strong>{{ tersedia }}</strong>
+            <span>Buku Tersedia</span>
+        </div>
+
+        <div class="summary-item">
+            <strong>{{ buku|length }}</strong>
+            <span>Koleksi Ditampilkan</span>
+        </div>
+
+    </div>
+
+</aside>
+
+{% endblock %}

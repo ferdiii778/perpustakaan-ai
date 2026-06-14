@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/buku.css') }}">
+{% endblock %}
+
+{% block title %}
+Kelola Buku
+{% endblock %}
+
+{% block content %}
+
+<main class="main-content">
+
+    <div class="page-header">
+
+        <h1>Kelola Buku</h1>
+
+        <p>
+            Dashboard >
+            Kelola Buku
+        </p>
+
+    </div>
+
+    <!-- CARD STATISTIK -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="icon blue">
+                <i class="fa-solid fa-book"></i>
+            </div>
+
+            <div>
+                <span>Total Buku</span>
+                <h2>{{ total_buku }}</h2>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon green">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+
+            <div>
+                <span>Buku Tersedia</span>
+                <h2>{{ tersedia }}</h2>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon orange">
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <div>
+                <span>Buku Dipinjam</span>
+                <h2>{{ dipinjam }}</h2>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon red">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+
+            <div>
+                <span>Buku Terlambat</span>
+                <h2>10</h2>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FILTER -->
+
+    <div class="filter-container">
+
+        <input
+        type="text"
+        placeholder="Cari buku...">
+
+        <select>
+            <option>Semua Kategori</option>
+        </select>
+
+        <select>
+            <option>Semua Status</option>
+        </select>
+
+        <button class="btn-reset">
+            Reset
+        </button>
+
+        <a href="/tambah_buku" class="btn-add">
+            + Tambah Buku
+        </a>
+
+    </div>
+
+    <!-- TABEL -->
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>No</th>
+                    <th>Sampul</th>
+                    <th>Judul Buku</th>
+                    <th>Penulis</th>
+                    <th>Kategori</th>
+                    <th>Tahun</th>
+                    <th>Stok</th>
+                    <th>Tersedia</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for b in buku %}
+
+            <tr>
+
+                <td>{{ loop.index }}</td>
+
+                <td>
+
+                {% if b[10] %}
+
+                <img
+                src="{{ url_for('static',
+                filename='images/books/' + b[10]) }}"
+                class="cover">
+
+                {% endif %}
+
+                </td>
+
+                <td class="text-left">{{ b[1] }}</td>
+                <td class="text-left">{{ b[2] }}</td>
+
+                <td>
+
+                    <span class="badge-category">
+                        {{ b[7] }}
+                    </span>
+
+
+
+                    
+
+                </td>
+
+                <td>{{ b[4] }}</td>
+
+                <td>{{ b[11] }}</td>
+
+                <td>{{ b[12] }}</td>
+
+                <td>
+
+                {% if b[13] == 'Tersedia' %}
+
+                    <span class="badge-success">
+                        Ada
+                    </span>
+
+                {% else %}
+
+                    <span class="badge-danger">
+                        Tidak Ada
+                    </span>
+
+                {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
+{% endblock %}

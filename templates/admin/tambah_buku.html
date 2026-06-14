@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tambah Buku</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/buku.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+body{
+    background:#f5f7fb;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.container{
+    display:flex;
+}
+
+.sidebar{
+    width:250px;
+    background:white;
+    min-height:100vh;
+    padding:20px;
+    border-right:1px solid #eee;
+}
+
+.sidebar h3{
+    margin-bottom:30px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    padding:12px;
+    margin-bottom:8px;
+    border-radius:8px;
+}
+
+.sidebar li.active{
+    background:#2563eb;
+}
+
+.sidebar li.active a{
+    color:white;
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:#333;
+}
+
+.content{
+    flex:1;
+    padding:30px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.form-layout{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.card h3{
+    margin-bottom:20px;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+textarea{
+    resize:none;
+}
+
+.upload-box{
+    border:2px dashed #d6d6d6;
+    padding:40px;
+    text-align:center;
+    border-radius:10px;
+}
+
+.upload-box i{
+    font-size:40px;
+    color:#2563eb;
+}
+
+.upload-box input{
+    margin-top:15px;
+}
+
+.btn-area{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn-cancel{
+    background:white;
+    border:1px solid #2563eb;
+    color:#2563eb;
+    padding:12px 20px;
+    border-radius:8px;
+}
+
+.btn-save{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+}
+
+.status-group label{
+    display:block;
+    margin-bottom:10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h3>📚 Perpustakaan</h3>
+
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li class="active"><a href="/kelola_buku">Kelola Buku</a></li>
+            <li><a href="/riwayat">Riwayat</a></li>
+            <li><a href="/pengaturan">Pengaturan</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+
+    </aside>
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+        <div class="header">
+            <div>
+                <h2>Tambah Buku</h2>
+                <p>Kelola Buku > Tambah Buku</p>
+            </div>
+        </div>
+
+        <form action="/simpan_buku"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <div class="form-layout">
+
+                <!-- KIRI -->
+
+                <div class="card">
+
+                    <h3>Informasi Buku</h3>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>Judul Buku *</label>
+                            <input type="text"
+                                   name="judul_buku"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Penulis *</label>
+                            <input type="text"
+                                   name="penulis"
+                                   required>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>Penerbit</label>
+                            <input type="text"
+                                   name="penerbit">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tahun Terbit</label>
+                            <input type="number"
+                                   name="tahun_terbit">
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>ISBN</label>
+                            <input type="text"
+                                   name="isbn">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bahasa</label>
+
+                            <select name="bahasa">
+                                <option>Indonesia</option>
+                                <option>Inggris</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>Kategori</label>
+
+                            <select name="kategori">
+                                <option>Fiksi</option>
+                                <option>Non Fiksi</option>
+                                <option>Sejarah</option>
+                                <option>Sains</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Genre</label>
+                            <input type="text"
+                                   name="genre">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Deskripsi Buku</label>
+
+                        <textarea
+                        rows="5"
+                        name="deskripsi"></textarea>
+
+                    </div>
+
+                    <br>
+
+                    <h3>Detail Tambahan</h3>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>Rak / Lokasi</label>
+                            <input type="text"
+                                   name="rak_lokasi">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tag</label>
+                            <input type="text"
+                                   name="tags">
+                        </div>
+
+                    </div>
+
+                    <div class="btn-area">
+
+                        <button type="reset"
+                                class="btn-cancel">
+                            Batal
+                        </button>
+
+                        <button type="submit"
+                                class="btn-save">
+                            Simpan Buku
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- KANAN -->
+
+                <div>
+
+                    <!-- Upload -->
+
+                    <div class="card">
+
+                        <h3>Sampul Buku</h3>
+
+                        <div class="upload-box">
+
+                            <i class="fa-regular fa-image"></i>
+
+                            <p>Upload Sampul Buku</p>
+
+                            <input
+                            type="file"
+                            name="sampul"
+                            accept="image/*">
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <!-- Stok -->
+
+                    <div class="card">
+
+                        <h3>Informasi Stok</h3>
+
+                        <div class="form-group">
+
+                            <label>Jumlah Eksemplar</label>
+
+                            <input
+                            type="number"
+                            name="jumlah_eksemplar"
+                            value="1">
+
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+
+                            <label>Stok Tersedia</label>
+
+                            <input
+                            type="number"
+                            name="stok_tersedia"
+                            value="1">
+
+                        </div>
+
+                        <br>
+
+                        <div class="status-group">
+
+                            <label>
+                                <input type="radio"
+                                       name="status_buku"
+                                       value="Tersedia"
+                                       checked>
+                                Tersedia
+                            </label>
+
+                            <label>
+                                <input type="radio"
+                                       name="status_buku"
+                                       value="Dipinjam">
+                                Dipinjam
+                            </label>
+
+                            <label>
+                                <input type="radio"
+                                       name="status_buku"
+                                       value="Tidak dapat dipinjam">
+                                Tidak dapat dipinjam
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>
