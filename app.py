@@ -22,9 +22,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Koneksi Supabase PostgreSQL
 def get_db_connection():
     return psycopg2.connect(
-        host="db.gucdxbumigjiqlpbzxbd.supabase.co",
+        host="aws-1-ap-northeast-1.pooler.supabase.com",
         database="postgres",
-        user="postgres",
+        user="postgres.gucdxbumigjiqlpbzxbd",
         password="Al_iryadIu*",
         port="5432",
         sslmode="require"
