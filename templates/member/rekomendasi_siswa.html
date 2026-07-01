@@ -1,0 +1,146 @@
+<div class="ai-page">
+    <div class="ai-main">
+        <div class="ai-header">
+            <h1>Rekomendasi AI Untuk Kamu ✧</h1>
+            <p>Hai {{ nama }} 👋</p>
+            <span>
+                Cari rekomendasi buku berdasarkan minatmu, misalnya horor, AI, novel, sejarah, atau pemrograman.
+            </span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon purple">⚙</div>
+                <div>
+                    <p>Minat Pencarian</p>
+                    <h4>{{ query if query else 'Belum dicari' }}</h4>
+                    <small>AI akan mencari dari koleksi buku perpustakaan</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon orange">☆</div>
+                <div>
+                    <p>Total Rekomendasi</p>
+                    <h2>{{ rekomendasi|length if rekomendasi else 0 }}</h2>
+                    <small>Berdasarkan hasil pilihan AI</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon green">◎</div>
+                <div>
+                    <p>Status Rekomendasi</p>
+                    <h2>{% if rekomendasi %}Cocok{% elif query %}Alternatif{% else %}Cari{% endif %}</h2>
+                    <small>Hasil diambil dari database buku</small>
+                </div>
+            </div>
+        </div>
+
+        <section class="recommend-card">
+            <div class="section-title">
+                <div>
+                    <h3>Rekomendasi Terbaik Untuk Kamu</h3>
+                    <p>
+                        {% if query %}
+                            Hasil rekomendasi untuk "{{ query }}"
+                        {% else %}
+                            Masukkan minat bacaanmu di kolom Tanya AI Buku
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="book-row">
+                {% if rekomendasi %}
+                    {% for buku in rekomendasi %}
+                    <div class="ai-book-card">
+                        <div class="ai-book-cover">
+                            {% if buku[10] %}
+                                <img src="{{ url_for('static', filename='images/books/' ~ buku[10]) }}" alt="{{ buku[1] }}">
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+                        </div>
+
+                        <h4>{{ buku[1] }}</h4>
+                        <p>{{ buku[2] }}</p>
+                        <span>{{ buku[7] }}</span>
+
+                        <small>Kecocokan {{ 95 - loop.index0 * 3 }}%</small>
+                        <div class="progress">
+                            <div style="width: {{ 95 - loop.index0 * 3 }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-recommendation">
+                        <h4>Belum ada rekomendasi</h4>
+
+                        {% if query %}
+                            <p>
+                                Maaf, buku yang kamu cari belum tersedia atau belum cocok di database.
+                                Coba gunakan kata kunci lain seperti “motivasi belajar”, “manajemen waktu”,
+                                “Python dasar”, atau “kebiasaan positif”.
+                            </p>
+                        {% else %}
+                            <p>Coba ketik tema buku yang kamu inginkan di sebelah kanan.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <aside class="ai-sidebar">
+        <div class="chat-box">
+            <h3>Tanya AI Buku</h3>
+            <p>Tanyakan buku yang ingin kamu cari</p>
+
+            {% if query %}
+                <div class="bubble user">{{ query }}</div>
+
+                <div class="bubble bot">
+                    {% if rekomendasi %}
+                        Berdasarkan kebutuhanmu, saya merekomendasikan:<br><br>
+                        {% for buku in rekomendasi[:3] %}
+                            {{ loop.index }}. {{ buku[1] }}<br>
+                        {% endfor %}
+                        <br>
+                        Buku-buku tersebut dipilih dari koleksi perpustakaan yang tersedia.
+                    {% else %}
+                        Maaf, buku yang kamu cari belum tersedia di Perpustakaan SMA Al Irsyad Kota Tegal.<br><br>
+                        Sebagai alternatif, coba cari dengan kata kunci:<br>
+                        - Buku Motivasi Belajar<br>
+                        - Manajemen Waktu<br>
+                        - Membangun Kebiasaan Positif
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="bubble user">Saya ingin belajar tentang Artificial Intelligence</div>
+                <div class="bubble bot">
+                    Silakan ketik tema buku yang kamu inginkan, nanti AI akan mencarikan buku yang sesuai.
+                </div>
+            {% endif %}
+
+            <form action="/proses_rekomendasi_ai" method="POST" class="chat-input">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Ketik pertanyaanmu..."
+                    value="{{ query if query else '' }}"
+                    required
+                >
+                <button type="submit">➤</button>
+            </form>
+        </div>
+
+        <div class="tips-box">
+            <h3>Tips Membaca Untukmu</h3>
+            <p>
+                Coba tulis minatmu secara spesifik, misalnya “buku horor ringan”,
+                “belajar Python”, atau “novel sejarah”.
+            </p>
+        </div>
+    </aside>
+</div>

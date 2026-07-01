@@ -1,0 +1,268 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Kelola Anggota{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/anggota.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="main-content">
+
+    <div class="page-header">
+        <div>
+            <h1>Kelola Anggota</h1>
+            <p>Kelola data user perpustakaan dengan mudah dan terorganisir.</p>
+        </div>
+
+        <a href="/tambah_anggota" class="btn-add">
+            <i class="fa-solid fa-plus"></i>
+            Tambah Anggota
+        </a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="icon blue">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+                <span>Total Anggota</span>
+                <h2>{{ total_anggota }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <span>Anggota Aktif</span>
+                <h2>{{ anggota_aktif }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon orange">
+                <i class="fa-solid fa-user-xmark"></i>
+            </div>
+            <div>
+                <span>Anggota Nonaktif</span>
+                <h2>{{ anggota_nonaktif }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon red">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+            <div>
+                <span>Anggota Terlambat</span>
+                <h2>0</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-grid">
+
+        <div class="table-card">
+
+            <div class="table-header">
+                <div>
+                    <h3>Daftar Anggota</h3>
+                    <p>Data anggota yang terdaftar di sistem perpustakaan.</p>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <input 
+                    type="text" 
+                    id="searchAnggota"
+                    placeholder="Cari nama, email, role, status...">
+
+                <select id="filterRoleAnggota">
+                    <option value="semua">Semua Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="guru">Guru</option>
+                    <option value="siswa">Siswa</option>
+                    <option value="lainnya">Lainnya</option>
+                </select>
+
+                <select id="filterStatusAnggota">
+                    <option value="semua">Semua Status</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Nonaktif</option>
+                </select>
+
+                <button type="button" class="btn-reset" id="resetFilterAnggota">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tableAnggota">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Foto</th>
+                            <th>Nama Lengkap</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for u in users %}
+                        <tr 
+                            data-role="{{ u[4]|lower }}"
+                            data-status="{% if u[5] == True %}aktif{% else %}nonaktif{% endif %}">
+                            
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                {% if u[6] %}
+                                    <img 
+                                        src="{{ url_for('static', filename='images/' ~ u[6]) }}"
+                                        class="user-photo"
+                                        alt="Foto {{ u[1] }}">
+                                {% else %}
+                                    <img 
+                                        src="https://ui-avatars.com/api/?name={{ u[1] }}&background=2563eb&color=fff"
+                                        class="user-photo"
+                                        alt="Foto {{ u[1] }}">
+                                {% endif %}
+                            </td>
+
+                            <td class="text-left">{{ u[1] }}</td>
+                            <td>{{ u[2] }}</td>
+
+                            <td>
+                                <span class="role-badge">{{ u[4] }}</span>
+                            </td>
+
+                            <td>
+                                {% if u[5] == True %}
+                                    <span class="badge-success">Aktif</span>
+                                {% else %}
+                                    <span class="badge-danger">Nonaktif</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="/edit_anggota/{{ u[0] }}" class="btn-icon edit" title="Edit">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+
+                                    <a href="/hapus_anggota/{{ u[0] }}" 
+                                       class="btn-icon delete"
+                                       title="Hapus"
+                                       onclick="return confirm('Yakin ingin menghapus anggota ini?')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="empty-data">
+                                Belum ada data anggota.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <p id="emptySearchAnggota" class="empty-data" style="display:none; padding:18px;">
+                    Data anggota tidak ditemukan.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="side-card">
+            <h3>Ringkasan Anggota</h3>
+
+            <div class="summary-row">
+                <span>Total Anggota</span>
+                <b>{{ total_anggota }}</b>
+            </div>
+
+            <div class="summary-row green">
+                <span>Anggota Aktif</span>
+                <b>{{ anggota_aktif }}</b>
+            </div>
+
+            <div class="summary-row red">
+                <span>Anggota Nonaktif</span>
+                <b>{{ anggota_nonaktif }}</b>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchAnggota');
+    const roleFilter = document.getElementById('filterRoleAnggota');
+    const statusFilter = document.getElementById('filterStatusAnggota');
+    const resetButton = document.getElementById('resetFilterAnggota');
+    const table = document.getElementById('tableAnggota');
+    const emptyText = document.getElementById('emptySearchAnggota');
+
+    if (!searchInput || !roleFilter || !statusFilter || !table) return;
+
+    function filterAnggota() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        const selectedRole = roleFilter.value;
+        const selectedStatus = statusFilter.value;
+
+        const rows = table.querySelectorAll('tbody tr');
+        let visibleCount = 0;
+
+        rows.forEach(function (row) {
+            if (row.querySelector('.empty-data')) {
+                return;
+            }
+
+            const rowText = row.textContent.toLowerCase();
+            const rowRole = row.dataset.role;
+            const rowStatus = row.dataset.status;
+
+            const matchKeyword = rowText.includes(keyword);
+            const matchRole = selectedRole === 'semua' || rowRole === selectedRole;
+            const matchStatus = selectedStatus === 'semua' || rowStatus === selectedStatus;
+
+            if (matchKeyword && matchRole && matchStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (emptyText) {
+            emptyText.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    }
+
+    searchInput.addEventListener('input', filterAnggota);
+    roleFilter.addEventListener('change', filterAnggota);
+    statusFilter.addEventListener('change', filterAnggota);
+
+    resetButton.addEventListener('click', function () {
+        searchInput.value = '';
+        roleFilter.value = 'semua';
+        statusFilter.value = 'semua';
+        filterAnggota();
+    });
+});
+</script>
+
+{% endblock %}

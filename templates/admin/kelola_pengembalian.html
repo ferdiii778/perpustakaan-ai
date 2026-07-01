@@ -1,0 +1,243 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Pengembalian Buku{% endblock %}
+
+{% block content %}
+
+<main class="main-content">
+
+    <div class="topbar">
+        <div class="search-box">
+            <i class="ti ti-search"></i>
+            <input 
+                type="text"
+                placeholder="Cari buku, anggota, atau ID peminjaman...">
+        </div>
+
+        <div class="admin-profile">
+            <div class="notif">
+                <i class="ti ti-bell"></i>
+                <span>3</span>
+            </div>
+            <div class="profile-box">
+                <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admin">
+                <div>
+                    <h5>Admin</h5>
+                    <p>Administrator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="page-header">
+        <h1>Pengembalian Buku</h1>
+        <p>Dashboard &gt; Pengembalian</p>
+    </section>
+
+    <section class="return-stats">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="ti ti-book"></i></div>
+            <div>
+                <span>Hari Ini</span>
+                <h3>{{ hari_ini }}</h3>
+                <p>Pengembalian</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
+            <div>
+                <span>Sudah Dikembalikan</span>
+                <h3>{{ sudah_dikembalikan }}</h3>
+                <p>Buku</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon orange"><i class="ti ti-clock"></i></div>
+            <div>
+                <span>Terlambat</span>
+                <h3>{{ terlambat }}</h3>
+                <p>Buku</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="ti ti-currency-dollar"></i></div>
+            <div>
+                <span>Total Denda</span>
+                <h3>Rp{{ "{:,.0f}".format(total_denda).replace(",", ".") }}</h3>
+                <p>Denda terkumpul</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="return-layout">
+
+        <div class="return-table-card">
+
+            <div class="table-tools">
+                <div class="table-search">
+                    <i class="ti ti-search"></i>
+                    <input 
+                        type="text"
+                        id="searchPengembalian"
+                        placeholder="Cari ID Peminjaman / Nama Anggota / Judul Buku...">
+                </div>
+            </div>
+
+            <div class="tabs">
+                <span>Semua</span>
+            </div>
+
+            <table class="return-table" id="tablePengembalian">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID Peminjaman</th>
+                        <th>Anggota</th>
+                        <th>Buku</th>
+                        <th>Tgl Pinjam</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Denda</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for p in pengembalian %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+
+                        <td>PJM-{{ "%05d"|format(p[0]) }}</td>
+
+                        <td>
+                            <strong>{{ p[1] }}</strong>
+                            <small>{{ p[2] }}</small>
+                        </td>
+
+                        <td class="book-cell">
+                            {% if p[5] %}
+                                <img src="{{ url_for('static', filename='images/books/' ~ p[5]) }}">
+                            {% endif %}
+                            <div>
+                                <strong>{{ p[3] }}</strong>
+                                <small>{{ p[4] }}</small>
+                            </div>
+                        </td>
+
+                        <td>{{ p[6] }}</td>
+
+                        <td>
+                            {{ p[7] }}
+                            {% if p[11] > 0 %}
+                                <small class="late-text">{{ p[11] }} hari terlambat</small>
+                            {% else %}
+                                <small class="safe-text">Tepat waktu</small>
+                            {% endif %}
+                        </td>
+
+                        <td>Rp {{ "{:,.0f}".format(p[8]).replace(",", ".") }}</td>
+
+                        <td>
+                            {% if p[9] == 'terlambat' %}
+                                <span class="badge danger">Terlambat</span>
+                            {% elif p[9] == 'dikembalikan' %}
+                                <span class="badge success">Dikembalikan</span>
+                            {% else %}
+                                <span class="badge primary">Dipinjam</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if p[9] != 'dikembalikan' %}
+                                <a href="{{ url_for('proses_pengembalian', id=p[0]) }}"
+                                   class="btn-return"
+                                   onclick="return confirm('Yakin buku ini sudah dikembalikan?')">
+                                    Kembalikan
+                                </a>
+                            {% else %}
+                                <span class="done-text">Selesai</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="empty-data">Belum ada data pengembalian.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p id="searchEmptyText" class="empty-data" style="display:none; margin-top:16px;">
+                Data tidak ditemukan.
+            </p>
+
+        </div>
+
+        <aside class="return-side">
+            <div class="side-card">
+                <h4><i class="ti ti-receipt"></i> Ringkasan Denda</h4>
+                <div class="side-row">
+                    <span>Total Denda</span>
+                    <strong>Rp{{ "{:,.0f}".format(total_denda).replace(",", ".") }}</strong>
+                </div>
+                <div class="side-row">
+                    <span>Sudah Dibayar</span>
+                    <strong>Rp0</strong>
+                </div>
+                <div class="side-row red">
+                    <span>Belum Dibayar</span>
+                    <strong>Rp{{ "{:,.0f}".format(total_denda).replace(",", ".") }}</strong>
+                </div>
+            </div>
+
+            <div class="side-card info-card">
+                <h4><i class="ti ti-info-circle"></i> Informasi</h4>
+                <p>Hitung denda otomatis saat pengembalian.</p>
+                <p>Denda keterlambatan: Rp1.000 / hari / buku.</p>
+                <p>Pastikan buku dalam kondisi baik saat diterima.</p>
+            </div>
+        </aside>
+
+    </section>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchPengembalian');
+    const table = document.getElementById('tablePengembalian');
+    const emptyText = document.getElementById('searchEmptyText');
+
+    if (!searchInput || !table) return;
+
+    searchInput.addEventListener('input', function () {
+        const keyword = this.value.toLowerCase().trim();
+        const rows = table.querySelectorAll('tbody tr');
+        let visibleCount = 0;
+
+        rows.forEach(function (row) {
+            if (row.querySelector('.empty-data')) {
+                return;
+            }
+
+            const rowText = row.textContent.toLowerCase();
+
+            if (rowText.includes(keyword)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (emptyText) {
+            emptyText.style.display = visibleCount === 0 && keyword !== '' ? 'block' : 'none';
+        }
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Perpustakaan{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="member-layout">
+
+    <aside class="member-sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}"
+                     alt="Logo Perpustakaan">
+            </div>
+        
+            <div class="brand-text">
+                <h4>Perpustakaan</h4>
+                <span>SMA Al Irsyad Tegal</span>
+            </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <nav class="member-menu">
+            <p class="menu-label">Menu Utama</p>
+
+            <a href="/dashboard_user" class="menu-item {% if request.path == '/dashboard_user' %}active{% endif %}">
+                <span class="menu-icon"><i class="fa-solid fa-house"></i></span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/daftar_buku" class="menu-item {% if request.path == '/daftar_buku' %}active{% endif %}">
+                <span class="menu-icon"><i class="fa-solid fa-book-open"></i></span>
+                <span>Buku</span>
+            </a>
+
+            <!-- <a href="/rekomendasi_ai" class="menu-item {% if request.path == '/rekomendasi_ai' %}active{% endif %}">
+                <span class="menu-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                <span>Rekomendasi AI</span>
+                <span class="badge-new">Baru</span>
+            </a> -->
+
+            <p class="menu-label">Aktivitas</p>
+
+            <a href="/riwayat" class="menu-item {% if request.path == '/riwayat' %}active{% endif %}">
+                <span class="menu-icon"><i class="fa-regular fa-clock"></i></span>
+                <span>Riwayat Pinjam</span>
+            </a>
+
+            <!-- <a href="#" class="menu-item">
+                <span class="menu-icon"><i class="fa-regular fa-heart"></i></span>
+                <span>Favorit Saya</span>
+            </a> -->
+
+            <a href="/pengaturan" class="menu-item {% if request.path == '/pengaturan' %}active{% endif %}">
+                <span class="menu-icon"><i class="fa-solid fa-gear"></i></span>
+                <span>Pengaturan</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="ai-promo-card">
+                <div class="ai-promo-header">
+                    <div class="ai-promo-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <p class="ai-promo-title">Rekomendasi AI</p>
+                        <p class="ai-promo-sub">Dipersonalisasi untukmu</p>
+                    </div>
+                </div>
+                <p class="ai-promo-desc">Temukan bacaan berikutnya berdasarkan minat dan riwayat kamu.</p>
+                <a href="/rekomendasi_ai" class="ai-promo-btn">
+                    Coba Sekarang <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <a href="/logout" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Keluar</span>
+            </a>
+        </div>
+
+    </aside>
+
+    {% block content %}{% endblock %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+.ai-page {
+    display: grid;
+    grid-template-columns: 1fr 310px;
+    gap: 24px;
+}
+
+.ai-header {
+    margin-bottom: 18px;
+}
+
+.ai-header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1f1b5f;
+    margin-bottom: 8px;
+}
+
+.ai-header p {
+    color: #6b63ff;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.ai-header span {
+    color: #7d7aa2;
+    font-size: 14px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.stat-card,
+.recommend-card,
+.chat-box,
+.tips-box,
+.insight-box {
+    background: #fff;
+    border: 1px solid #e8e7f6;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(31, 27, 84, .04);
+}
+
+.stat-card {
+    padding: 22px;
+    display: flex;
+    gap: 18px;
+    min-height: 115px;
+}
+
+.icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.purple { background: #eeeaff; color: #625df5; }
+.orange { background: #fff0df; color: #ff9b45; }
+.green { background: #ddf8ec; color: #13b77c; }
+
+.stat-card p {
+    color: #77739d;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.stat-card h2,
+.stat-card h4 {
+    color: #19164f;
+    margin: 6px 0;
+}
+
+.stat-card small {
+    color: #6b63ff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.recommend-card {
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+.section-title h3 {
+    color: #19164f;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.section-title p {
+    color: #8a86a8;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.section-title a {
+    color: #625df5;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.book-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+}
+
+.book-card {
+    border: 1px solid #ebeafd;
+    border-radius: 12px;
+    padding: 12px;
+    background: #fff;
+}
+
+.book-cover {
+    width: 100%;
+    height: 100px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #30256d, #6b63ff);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.book-cover.teacher {
+    background: linear-gradient(135deg, #f97316, #625df5);
+}
+
+.book-card h4 {
+    font-size: 13px;
+    color: #19164f;
+    margin-bottom: 4px;
+}
+
+.book-card p {
+    font-size: 12px;
+    color: #7d7aa2;
+    margin-bottom: 7px;
+}
+
+.book-card span {
+    display: inline-block;
+    font-size: 11px;
+    background: #f0efff;
+    color: #625df5;
+    padding: 4px 7px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.book-card small {
+    display: block;
+    color: #1aaa72;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.progress {
+    width: 100%;
+    height: 5px;
+    background: #eef0f7;
+    border-radius: 99px;
+    margin-top: 6px;
+}
+
+.progress div {
+    height: 100%;
+    background: #14b875;
+    border-radius: 99px;
+}
+
+.mini-book-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.mini-book-row div {
+    border: 1px solid #ebeafd;
+    border-radius: 12px;
+    padding: 14px;
+    color: #19164f;
+    font-size: 13px;
+}
+
+.mini-book-row span {
+    display: block;
+    color: #8a86a8;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.ai-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.chat-box,
+.tips-box,
+.insight-box {
+    padding: 22px;
+}
+
+.chat-box h3,
+.tips-box h3,
+.insight-box h3 {
+    color: #19164f;
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.chat-box p,
+.tips-box p,
+.insight-box p {
+    color: #7d7aa2;
+    font-size: 13px;
+}
+
+.bubble {
+    max-width: 90%;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    margin: 18px 0;
+    line-height: 1.5;
+}
+
+.bubble.user {
+    margin-left: auto;
+    background: #ebe8ff;
+    color: #4d47d8;
+}
+
+.bubble.bot {
+    background: #fff;
+    border: 1px solid #ecebfd;
+    color: #27245f;
+}
+
+.chat-input {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.chat-input input {
+    flex: 1;
+    height: 42px;
+    border: 1px solid #e1e0f4;
+    border-radius: 10px;
+    padding: 0 12px;
+}
+
+.chat-input button {
+    width: 44px;
+    border: none;
+    border-radius: 10px;
+    background: #625df5;
+    color: white;
+    cursor: pointer;
+}
+
+.insight-box ul {
+    padding-left: 18px;
+    margin: 18px 0;
+    color: #19164f;
+    font-size: 14px;
+    line-height: 2;
+}
+
+.teacher-message {
+    background: #eeeaff;
+    color: #625df5;
+    padding: 18px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .ai-page {
+        grid-template-columns: 1fr;
+    }
+
+    .book-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .stats-grid,
+    .book-row,
+    .mini-book-row {
+        grid-template-columns: 1fr;
+    }
+}

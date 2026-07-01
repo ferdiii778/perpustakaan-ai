@@ -1,0 +1,163 @@
+{% extends 'base/base_member.html' %}
+
+{% block title %}Rekomendasi AI Guru{% endblock %}
+
+{% block content %}
+
+<div class="ai-page">
+    <div class="ai-main">
+        <div class="ai-header">
+            <h1>Rekomendasi AI Untuk Guru ✧</h1>
+            <p>Hai Bapak/Ibu {{ nama }} 👋</p>
+            <span>
+                AI menampilkan rekomendasi buku yang relevan untuk pengajaran dan pengembangan diri.
+            </span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon purple">▣</div>
+                <div>
+                    <p>Mata Pelajaran</p>
+                    <h4>{{ mata_pelajaran if mata_pelajaran else 'Belum diatur' }}</h4>
+                    <small>Kelas yang Diampu<br>{{ kelas if kelas else '-' }}</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon orange">📚</div>
+                <div>
+                    <p>Total Rekomendasi</p>
+                    <h2>{{ rekomendasi|length if rekomendasi else 0 }}</h2>
+                    <small>Berdasarkan kebutuhan guru</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon green">◎</div>
+                <div>
+                    <p>Status Rekomendasi</p>
+                    <h2>{% if rekomendasi %}Cocok{% else %}Cari{% endif %}</h2>
+                    <small>Diambil dari koleksi perpustakaan</small>
+                </div>
+            </div>
+        </div>
+
+        <section class="recommend-card">
+            <div class="section-title">
+                <div>
+                    <h3>Rekomendasi Buku Untuk Pengajaran</h3>
+                    <p>
+                        {% if query %}
+                            Hasil rekomendasi untuk "{{ query }}"
+                        {% else %}
+                            Buku yang direkomendasikan untuk mendukung kegiatan mengajar
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="book-row">
+                {% if rekomendasi %}
+                    {% for buku in rekomendasi %}
+                    <div class="book-card">
+                        <div class="book-cover teacher">
+                            {% if buku[10] %}
+                                <img src="{{ url_for('static', filename='images/books/' ~ buku[10]) }}" alt="{{ buku[1] }}">
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+                        </div>
+
+                        <h4>{{ buku[1] }}</h4>
+                        <p>{{ buku[2] }}</p>
+                        <span>{{ buku[7] }}</span>
+                        <small>Kecocokan {{ 94 - loop.index0 * 2 }}%</small>
+
+                        <div class="progress">
+                            <div style="width: {{ 94 - loop.index0 * 2 }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-recommendation">
+                        <h4>Belum ada rekomendasi</h4>
+                        <p>Coba cari buku seperti “strategi pembelajaran”, “kurikulum”, atau “manajemen kelas”.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="recommend-card small-section">
+            <div class="section-title">
+                <div>
+                    <h3>Buku Pengembangan Diri</h3>
+                    <p>Tingkatkan kompetensi dan wawasan Anda</p>
+                </div>
+            </div>
+
+            <div class="mini-book-row">
+                {% if rekomendasi %}
+                    {% for buku in rekomendasi[:4] %}
+                    <div>
+                        📘 <b>{{ buku[1] }}</b>
+                        <span>{{ buku[2] }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div>📘 <b>Literasi Digital</b><span>Donny BU</span></div>
+                    <div>📘 <b>Public Speaking</b><span>Dale Carnegie</span></div>
+                    <div>📘 <b>Manajemen Kelas</b><span>M. Thobroni</span></div>
+                    <div>📘 <b>Pengembangan Karakter</b><span>Thomas Lickona</span></div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <aside class="ai-sidebar">
+        <div class="insight-box">
+            <h3>Insight AI Untuk Guru</h3>
+
+            {% if query %}
+                <p>AI menganalisis kebutuhan Anda berdasarkan pencarian:</p>
+                <div class="teacher-message">
+                    "{{ query }}"
+                </div>
+
+                {% if rekomendasi %}
+                    <ul>
+                        {% for buku in rekomendasi[:4] %}
+                            <li>{{ buku[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Belum ditemukan buku yang sesuai dengan pencarian tersebut.</p>
+                {% endif %}
+            {% else %}
+                <p>AI menemukan bahwa guru juga sering membutuhkan bacaan tentang:</p>
+                <ul>
+                    <li>Literasi Digital</li>
+                    <li>Public Speaking</li>
+                    <li>Penelitian Tindakan Kelas</li>
+                    <li>Strategi Pembelajaran</li>
+                </ul>
+            {% endif %}
+
+            <form action="/proses_rekomendasi_ai" method="POST" class="chat-input">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Cari buku untuk pengajaran..."
+                    required
+                >
+                <button type="submit">➤</button>
+            </form>
+
+            <div class="teacher-message">
+                Terus eksplorasi untuk menjadi guru yang inspiratif! 🚀
+            </div>
+        </div>
+    </aside>
+</div>
+
+{% endblock %}

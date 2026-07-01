@@ -1,0 +1,173 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Pengaturan{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pengaturan.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <div class="settings-page">
+        <div class="page-header">
+            <h1>Pengaturan</h1>
+            <p>Kelola pengaturan sistem perpustakaan sesuai kebutuhan.</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <div class="setting-card">
+                <h3>Profil Admin</h3>
+            
+                <form class="profile-form" action="/update_profil_admin" method="POST" enctype="multipart/form-data">
+                    <div class="profile-photo">
+                        {% if admin[4] %}
+                            <img src="{{ url_for('static', filename='images/' ~ admin[4]) }}" class="avatar">
+                        {% else %}
+                            <div class="avatar avatar-placeholder">
+                                {{ admin[1][0]|upper }}
+                            </div>
+                        {% endif %}
+            
+                        <label class="outline-btn">
+                            Ubah Foto
+                            <input type="file" name="foto_profil" hidden>
+                        </label>
+                    </div>
+            
+                    <div class="form-area">
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="nama" value="{{ admin[1] }}" required>
+            
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ admin[2] }}" required>
+            
+                        <label>Username</label>
+                        <input type="text" value="admin" readonly>
+            
+                        <label>Role</label>
+                        <input type="text" value="Administrator" disabled>
+            
+                        <button type="submit" class="primary-btn">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="setting-card">
+                <h3>Pengaturan Perpustakaan</h3>
+
+                <form class="form-area" action="/update_pengaturan_perpustakaan" method="POST">
+                    <label>Nama Perpustakaan</label>
+                    <input type="text" name="nama_perpustakaan"
+                           value="{{ pengaturan_perpus[1] if pengaturan_perpus else 'PERPUSTAKAAN SMA AL IRSYAD TEGAL' }}">
+
+                    <label>Alamat</label>
+                    <textarea name="alamat">{{ pengaturan_perpus[2] if pengaturan_perpus else 'Jl. Raya Mejasem No. 123, Kec. Kramat, Kab. Tegal, Jawa Tengah 52181' }}</textarea>
+
+                    <div class="two-col">
+                        <div>
+                            <label>No. Telepon</label>
+                            <input type="text" name="no_telepon"
+                                   value="{{ pengaturan_perpus[3] if pengaturan_perpus else '(0283) 1234567' }}">
+                        </div>
+                        <div>
+                            <label>Email</label>
+                            <input type="email" name="email"
+                                   value="{{ pengaturan_perpus[4] if pengaturan_perpus else 'perpustakaan@alirsyadtegal.sch.id' }}">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="primary-btn right">Simpan Perubahan</button>
+                </form>
+            </div>
+
+            <div class="setting-card">
+                <h3>Pengaturan Peminjaman</h3>
+
+                <form class="loan-grid" action="/update_pengaturan_peminjaman" method="POST">
+                    <div>
+                        <label>Maksimal Pinjam Buku per Anggota</label>
+                        <div class="input-unit">
+                            <input type="number" name="maksimal_peminjaman"
+                                   value="{{ pengaturan_pinjam[2] if pengaturan_pinjam else 3 }}">
+                            <span>Buku</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Lama Pinjam (Default)</label>
+                        <div class="input-unit">
+                            <input type="number" name="durasi_hari"
+                                   value="{{ pengaturan_pinjam[3] if pengaturan_pinjam else 7 }}">
+                            <span>Hari</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Maksimal Perpanjangan</label>
+                        <div class="input-unit">
+                            <input type="number" value="2">
+                            <span>Kali</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Lama Perpanjangan</label>
+                        <div class="input-unit">
+                            <input type="number" value="3">
+                            <span>Hari</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Denda Keterlambatan per Hari</label>
+                        <div class="input-unit">
+                            <span>Rp</span>
+                            <input type="number" name="denda_per_hari"
+                                   value="{{ pengaturan_pinjam[4] if pengaturan_pinjam else 1000 }}">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Peringatan Sebelum Jatuh Tempo</label>
+                        <div class="input-unit">
+                            <input type="number" value="2">
+                            <span>Hari</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Status Peminjaman Default</label>
+                        <select>
+                            <option>Dipinjam</option>
+                            <option>Dikembalikan</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="primary-btn loan-btn">Simpan Perubahan</button>
+                </form>
+            </div>
+
+            <div class="setting-card">
+                <h3>Keamanan Akun</h3>
+
+                <form class="form-area" action="/update_password_admin" method="POST">
+                    <label>Password Lama</label>
+                    <input type="password" name="password_lama" placeholder="Masukkan password lama" required>
+
+                    <label>Password Baru</label>
+                    <input type="password" name="password_baru" placeholder="Masukkan password baru" required>
+
+                    <label>Konfirmasi Password Baru</label>
+                    <input type="password" name="konfirmasi_password" placeholder="Konfirmasi password baru" required>
+
+                    <button type="submit" class="primary-btn right">Update Password</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

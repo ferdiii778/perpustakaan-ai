@@ -1,163 +1,226 @@
-{% extends 'base.html' %}
+{% extends 'base/base_member.html' %}
 
-{% block title %}
-Dashboard Perpustakaan
-{% endblock %}
+{% block title %}Dashboard Member{% endblock %}
 
 {% block content %}
 
-<main class="main-content">
+<main class="member-main">
 
-    <header>
-
-        <div>
-            <p class="eyebrow">Selamat datang kembali</p>
-            <h1>Halo, {{ nama }} 👋</h1>
+    <div class="topbar-member">
+        <div class="topbar-left">
+            <h1 class="topbar-greeting">Selamat datang, <em>{{ nama }}</em> 👋</h1>
+            <p class="topbar-date" id="current-date">Hari ini, memuat tanggal...</p>
         </div>
 
-        <div class="header-actions">
-
-            <div class="search-box">
+        <div class="topbar-right">
+            <form action="/daftar_buku" method="GET" class="search-member">
                 <i class="fa-solid fa-magnifying-glass"></i>
+                <input 
+                    type="text" 
+                    name="q"
+                    placeholder="Cari buku, penulis, kategori...">
+            </form>
+            <div class="profile-pill">
+                <img src="https://ui-avatars.com/api/?name={{ nama }}&background=6366f1&color=fff&bold=true" alt="{{ nama }}">
+                <div>
+                    <p>{{ nama }}</p>
+                    <small>{{ session['role']|capitalize }}</small>
+                </div>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
 
-                <input
-                type="text"
-                placeholder="Cari buku, penulis, atau kategori...">
+    <div class="stats-row">
+        <div class="stat-chip">
+            <div class="stat-chip-icon stat-chip-icon--blue">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <div>
+                <p class="stat-chip-value">2</p>
+                <p class="stat-chip-label">Sedang Dipinjam</p>
+            </div>
+        </div>
+        <div class="stat-chip">
+            <div class="stat-chip-icon stat-chip-icon--amber">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+                <p class="stat-chip-value">0</p>
+                <p class="stat-chip-label">Terlambat</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <section class="left-content">
+
+            <div class="book-section">
+                <div class="section-title">
+                    <div>
+                        <span class="section-eyebrow">Trending</span>
+                        <h2>Buku Populer</h2>
+                    </div>
+                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="book-list">
+                    {% for b in buku[:5] %}
+                    <div class="book-card">
+                        <div class="book-cover-wrap">
+                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <div class="book-hover-overlay">
+                                <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </a>
+                            </div>
+                        </div>
+                        <div class="book-info">
+                            <span class="book-genre">{{ b[7] }}</span>
+                            <h4>{{ b[1] }}</h4>
+                            <p>{{ b[2] }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
-            <button class="icon-btn">
-                <i class="fa-regular fa-bell"></i>
-                <span class="badge"></span>
-            </button>
-
-            <div class="user">
-
-                <img
-                src="https://ui-avatars.com/api/?name={{ nama }}&background=1E5FBF&color=fff"
-                width="40">
-
-                <span>{{ nama }}</span>
-
+            <div class="book-section">
+                <div class="section-title">
+                    <div>
+                        <span class="section-eyebrow">Baru Masuk</span>
+                        <h2>Buku Terbaru</h2>
+                    </div>
+                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="book-list">
+                    {% for b in buku[:5] %}
+                    <div class="book-card">
+                        <div class="book-cover-wrap">
+                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <div class="book-hover-overlay">
+                                <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </a>
+                            </div>
+                        </div>
+                        <div class="book-info">
+                            <span class="book-genre">{{ b[7] }}</span>
+                            <h4>{{ b[1] }}</h4>
+                            <p>{{ b[2] }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
-        </div>
-
-    </header>
-
-    <!-- BUKU TERBARU -->
-
-    <section>
-
-        <div class="section-header">
-
-            <h2>Koleksi Buku</h2>
-
-            <a href="{{ url_for('kelola_buku') }}">
-                Lihat Semua
-                <i class="fa-solid fa-arrow-right"></i>
-            </a>
-
-        </div>
-
-        <div class="books">
-
-            {% if buku %}
-
-                {% for b in buku %}
-
-                <div class="book-card">
-
-                    <div class="book-cover">
-
-                        {% if b[10] %}
-
-                        <img
-                        src="{{ url_for('static',
-                        filename='images/books/' + b[10]) }}"
-                        alt="{{ b[1] }}">
-
-                        {% else %}
-
-                        <img
-                        src="https://via.placeholder.com/300x450?text=No+Cover"
-                        alt="No Cover">
-
-                        {% endif %}
-
-                        <span class="book-tag">
-                            {{ b[7] }}
-                        </span>
-
+            <div class="book-section">
+                <div class="section-title">
+                    <div>
+                        <span class="section-eyebrow">Semua Koleksi</span>
+                        <h2>Kumpulan Buku</h2>
                     </div>
-
-                    <div class="book-info">
-
-                        <h4>{{ b[1] }}</h4>
-
-                        <p>{{ b[2] }}</p>
-
-                        <a
-                        href="{{ url_for('detail_buku', id=b[0]) }}"
-                        class="btn-detail">
-
-                            Lihat Detail
-
-                        </a>
-
+                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="book-list">
+                    {% for b in buku[:5] %}
+                    <div class="book-card">
+                        <div class="book-cover-wrap">
+                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <div class="book-hover-overlay">
+                                <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </a>
+                            </div>
+                        </div>
+                        <div class="book-info">
+                            <span class="book-genre">{{ b[7] }}</span>
+                            <h4>{{ b[1] }}</h4>
+                            <p>{{ b[2] }}</p>
+                        </div>
                     </div>
-
+                    {% endfor %}
                 </div>
+            </div>
 
-                {% endfor %}
+        </section>
 
-            {% else %}
+        <aside class="right-content">
 
-                <div class="empty-book">
-
-                    <i class="fa-solid fa-book"></i>
-
-                    <h3>Belum Ada Buku</h3>
-
-                    <p>
-                        Silakan tambahkan buku terlebih dahulu
-                        melalui menu Kelola Buku.
-                    </p>
-
+            <div class="side-card loan-summary-card">
+                <div class="side-card-header">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    <h3>Ringkasan Peminjaman</h3>
                 </div>
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <div class="summary-dot summary-dot--blue"></div>
+                        <span>Buku Dipinjam</span>
+                        <b class="summary-val--blue">2</b>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-dot summary-dot--red"></div>
+                        <span>Buku Terlambat</span>
+                        <b class="summary-val--red">0</b>
+                    </div>
+                    
+                </div>
+                <a href="/riwayat" class="btn-history">
+                    <i class="fa-solid fa-list"></i> Lihat Riwayat Lengkap
+                </a>
+            </div>
 
-            {% endif %}
+            <div class="quote-card">
+                <div class="quote-mark">"</div>
+                <p class="quote-text">Membaca adalah kunci untuk membuka pintu dunia tanpa batas.</p>
+                <p class="quote-author">— Perpustakaan Al Irsyad</p>
+            </div>
 
-        </div>
+            <div class="side-card category-card">
+                <div class="side-card-header">
+                    <i class="fa-solid fa-tag"></i>
+                    <h3>Kategori Buku</h3>
+                    <a href="#" class="header-link">Semua →</a>
+                </div>
+                <div class="category-list">
+                    <a href="#" class="category-item">
+                        <div class="category-dot" style="background:#6366f1"></div>
+                        <span class="category-name">Fiksi</span>
+                        <span class="category-count">128</span>
+                    </a>
+                    <a href="#" class="category-item">
+                        <div class="category-dot" style="background:#f59e0b"></div>
+                        <span class="category-name">Non Fiksi</span>
+                        <span class="category-count">96</span>
+                    </a>
+                    <a href="#" class="category-item">
+                        <div class="category-dot" style="background:#10b981"></div>
+                        <span class="category-name">Pengembangan Diri</span>
+                        <span class="category-count">74</span>
+                    </a>
+                    <a href="#" class="category-item">
+                        <div class="category-dot" style="background:#ef4444"></div>
+                        <span class="category-name">Sejarah</span>
+                        <span class="category-count">45</span>
+                    </a>
+                    <a href="#" class="category-item">
+                        <div class="category-dot" style="background:#3b82f6"></div>
+                        <span class="category-name">Sains & Teknologi</span>
+                        <span class="category-count">58</span>
+                    </a>
+                </div>
+            </div>
 
-    </section>
-
-</main>
-
-<!-- RIGHT PANEL -->
-
-<aside class="right-panel">
-
-    <div class="card card--summary">
-
-        <h3>Ringkasan Peminjaman</h3>
-
-        <div class="summary-item">
-            <strong>{{ total_buku }}</strong>
-            <span>Total Buku</span>
-        </div>
-
-        <div class="summary-item">
-            <strong>{{ tersedia }}</strong>
-            <span>Buku Tersedia</span>
-        </div>
-
-        <div class="summary-item">
-            <strong>{{ buku|length }}</strong>
-            <span>Koleksi Ditampilkan</span>
-        </div>
+        </aside>
 
     </div>
 
-</aside>
+</main>
+
+<script>
+    const d = new Date();
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date').textContent = d.toLocaleDateString('id-ID', opts);
+</script>
 
 {% endblock %}

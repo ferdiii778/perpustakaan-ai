@@ -1,0 +1,21 @@
+{% extends 'base/base_member.html' %}
+
+{% block title %}Rekomendasi AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/rekomendasi_ai.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="member-main">
+
+    {% if role == 'guru' %}
+        {% include 'member/rekomendasi_guru.html' %}
+    {% else %}
+        {% include 'member/rekomendasi_siswa.html' %}
+    {% endif %}
+
+</main>
+
+{% endblock %}

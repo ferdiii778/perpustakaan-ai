@@ -1,0 +1,125 @@
+{% extends 'base/base_member.html' %}
+
+{% block title %}Pengaturan{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pengaturan_member.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="member-main">
+
+```
+<div class="settings-header">
+    <div>
+        <h1>Pengaturan</h1>
+        <p>Kelola informasi akun dan preferensi kamu.</p>
+    </div>
+</div>
+
+<div class="settings-grid">
+
+    <!-- PROFIL -->
+    <div class="settings-card">
+        <h3>Profil Saya</h3>
+
+        <form action="/update_profil_user" method="POST" enctype="multipart/form-data" class="profile-form">
+
+            <div class="profile-photo">
+                {% if user[4] %}
+                    <img src="{{ url_for('static', filename='images/' ~ user[4]) }}" alt="Foto Profil">
+                {% else %}
+                    <div class="avatar-placeholder">
+                        {{ user[1][0]|upper }}
+                    </div>
+                {% endif %}
+
+                <label class="upload-btn">
+                    <i class="fa-regular fa-image"></i>
+                    Ubah Foto
+                    <input type="file" name="foto_profil" hidden>
+                </label>
+            </div>
+
+            <div class="profile-fields">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama" value="{{ user[1] }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ user[2] }}" required>
+                </div>
+
+                {% if user[3] == 'guru' %}
+                    <div class="form-group">
+                        <label>NIP</label>
+                        <input type="text" name="nomor_induk" value="{{ user[5] or '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mata Pelajaran</label>
+                        <input type="text" name="mata_pelajaran" value="{{ user[7] or '' }}">
+                    </div>
+
+                    <input type="hidden" name="kelas" value="">
+
+                {% elif user[3] == 'siswa' %}
+                    <div class="form-group">
+                        <label>NIS</label>
+                        <input type="text" name="nomor_induk" value="{{ user[5] or '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <input type="text" name="kelas" value="{{ user[6] or '' }}">
+                    </div>
+
+                    <input type="hidden" name="mata_pelajaran" value="">
+                {% endif %}
+
+                <button type="submit" class="primary-btn">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="settings-card">
+        <h3>Ubah Password</h3>
+
+        <form action="/update_password_user" method="POST" class="password-form">
+
+            <div class="form-group password-box">
+                <label>Password Lama</label>
+                <input type="password" name="password_lama" placeholder="Masukkan password lama" required>
+            </div>
+
+            <div class="form-group password-box">
+                <label>Password Baru</label>
+                <input type="password" name="password_baru" placeholder="Masukkan password baru" required>
+            </div>
+
+            <div class="form-group password-box">
+                <label>Konfirmasi Password Baru</label>
+                <input type="password" name="konfirmasi_password" placeholder="Konfirmasi password baru" required>
+            </div>
+
+            <button type="submit" class="primary-btn password-btn">
+                <i class="fa-solid fa-shield-halved"></i>
+                Update Password
+            </button>
+        </form>
+    </div>
+
+</div>
+```
+
+</main>
+
+{% endblock %}

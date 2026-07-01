@@ -1,0 +1,226 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Laporan{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- HEADER -->
+    <div class="report-header">
+
+        <div>
+            <h1>Laporan</h1>
+            <p>Kelola dan lihat laporan perpustakaan.</p>
+        </div>
+
+        <div class="report-actions">
+
+            <select>
+                <option>01 Mei 2024 - 31 Mei 2024</option>
+            </select>
+
+            <a href="{{ url_for('export_laporan_peminjaman_excel') }}" class="btn-export">
+                <i class="ti ti-download"></i>
+                Export Excel
+            </a>
+
+        </div>
+
+    </div>
+    
+    <div class="report-tabs">
+    
+        <a href="{{ url_for('laporan') }}"
+           class="report-tab {% if request.endpoint == 'laporan' %}active{% endif %}">
+            Rekap Peminjaman Buku
+        </a>
+    
+        <a href="{{ url_for('laporan_buku') }}"
+           class="report-tab {% if request.endpoint == 'laporan_buku' %}active{% endif %}">
+            Laporan Buku
+        </a>
+    
+        <a href="{{ url_for('laporan_denda') }}"
+            class="report-tab {% if request.endpoint == 'laporan_denda' %}active{% endif %}">
+            Laporan Denda
+        </a>
+    
+        <a href="{{ url_for('rekap_koleksi') }}"
+            class="report-tab {% if request.endpoint == 'rekap_koleksi' %}active{% endif %}">
+            Rekap Koleksi Buku
+        </a>
+    
+    </div>
+    <!-- STAT -->
+    <div class="report-stats">
+
+        <div class="report-card">
+            <i class="ti ti-book"></i>
+            <h2>542</h2>
+            <span>Total Peminjaman</span>
+        </div>
+
+        <div class="report-card">
+            <i class="ti ti-users"></i>
+            <h2>236</h2>
+            <span>Total Peminjam</span>
+        </div>
+
+        <div class="report-card">
+            <i class="ti ti-chart-line"></i>
+            <h2>17.5</h2>
+            <span>Rata-rata / Hari</span>
+        </div>
+
+        <div class="report-card">
+            <i class="ti ti-trophy"></i>
+            <h2>Atomic Habits</h2>
+            <span>Buku Terpopuler</span>
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="report-chart-grid">
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Grafik Peminjaman</h3>
+            </div>
+
+            <canvas id="loanChart"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Top 5 Buku</h3>
+            </div>
+
+            <div class="ranking-list">
+
+                <div class="rank-item">
+                    <span>1</span>
+                    <b>Atomic Habits</b>
+                    <small>78x</small>
+                </div>
+
+                <div class="rank-item">
+                    <span>2</span>
+                    <b>Laut Bercerita</b>
+                    <small>65x</small>
+                </div>
+
+                <div class="rank-item">
+                    <span>3</span>
+                    <b>1984</b>
+                    <small>58x</small>
+                </div>
+
+                <div class="rank-item">
+                    <span>4</span>
+                    <b>Sapiens</b>
+                    <small>54x</small>
+                </div>
+
+                <div class="rank-item">
+                    <span>5</span>
+                    <b>Psychology of Money</b>
+                    <small>48x</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="report-bottom">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Data Peminjaman Terbaru</h3>
+            </div>
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID</th>
+                        <th>Peminjam</th>
+                        <th>Buku</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>PJM001</td>
+                        <td>Ahmad</td>
+                        <td>Atomic Habits</td>
+                        <td><span class="badge blue">Dipinjam</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>PJM002</td>
+                        <td>Siti</td>
+                        <td>Laut Bercerita</td>
+                        <td><span class="badge green">Kembali</span></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Statistik Peminjaman</h3>
+            </div>
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(document.getElementById('loanChart'), {
+    type:'line',
+    data:{
+        labels:['Jan','Feb','Mar','Apr','Mei'],
+        datasets:[
+        {
+            label:'Peminjaman',
+            data:[50,60,75,70,90]
+        },
+        {
+            label:'Pengembalian',
+            data:[30,40,55,45,65]
+        }]
+    }
+});
+
+new Chart(document.getElementById('pieChart'), {
+    type:'doughnut',
+    data:{
+        labels:['Dipinjam','Kembali','Terlambat'],
+        datasets:[{
+            data:[542,486,15]
+        }]
+    }
+});
+
+</script>
+{% endblock %}

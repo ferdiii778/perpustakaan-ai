@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base_admin.html' %}
 
 {% block extra_css %}
 <link rel="stylesheet"
@@ -190,6 +190,20 @@ Kelola Buku
 
                 {% endif %}
 
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+                        <a href="/edit_buku/{{ b[0] }}" class="btn-edit">
+                            Edit
+                        </a>
+                
+                        <a href="/hapus_buku/{{ b[0] }}"
+                           class="btn-delete"
+                           onclick="return confirm('Yakin ingin menghapus buku ini?')">
+                            Hapus
+                        </a>
+                    </div>
                 </td>
 
             </tr>

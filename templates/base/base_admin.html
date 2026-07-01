@@ -9,101 +9,108 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_admin.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-<!-- CSS Utama Dashboard -->
-<link rel="stylesheet"
-href="{{ url_for('static', filename='css/dashboard_admin.css') }}">
+<!-- Tabler Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.19.0/tabler-icons.min.css">
 
-<!-- Font Awesome -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<!-- CSS Tambahan dari halaman lain -->
-{% block extra_css %}
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 </head>
 
 <body>
 
-<div class="dashboard">
+<div class="shell">
 
     <!-- SIDEBAR -->
-
     <aside class="sidebar">
 
-        <div class="logo">
-
-            <img
-            src="https://ui-avatars.com/api/?name=AL+I&background=1E5FBF&color=fff&bold=true"
-            alt="Logo">
-
-            <div>
-                <h4>Perpustakaan</h4>
-                <span>SMA Al Irsyad</span>
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}"
+                     alt="Logo Perpustakaan">
             </div>
-
+        
+            <div class="brand-text">
+                <h4>Perpustakaan</h4>
+                <span>SMA Al Irsyad Tegal</span>
+            </div>
         </div>
 
         <nav>
-
             <ul>
 
                 <li>
-                    <a href="{{ url_for('dashboard') }}">
-                        <i class="fa-solid fa-house"></i>
+                    <a href="{{ url_for('dashboard') }}"
+                       class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                        <i class="ti ti-layout-dashboard"></i>
                         Dashboard
                     </a>
                 </li>
 
+                <li><span class="nav-label">Manajemen</span></li>
+
                 <li>
-                    <a href="{{ url_for('kelola_buku') }}">
-                        <i class="fa-solid fa-book"></i>
+                    <a href="{{ url_for('kelola_buku') }}"
+                       class="nav-item {% if request.endpoint == 'kelola_buku' %}active{% endif %}">
+                        <i class="ti ti-books"></i>
                         Kelola Buku
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        Rekomendasi AI
+                    <a href="{{ url_for('kelola_anggota') }}"
+                       class="nav-item {% if request.endpoint == 'kelola_anggota' %}active{% endif %}">
+                        <i class="ti ti-users"></i>
+                        Kelola Anggota
+                    </a>
+                </li>
+
+                <li><span class="nav-label">Sistem</span></li>
+
+                <li>
+                    <a href="{{ url_for('kelola_peminjaman') }}"
+                       class="nav-item {% if request.endpoint == 'riwayat' %}active{% endif %}">
+                        <i class="ti ti-clock-hour-4"></i>
+                        Peminjaman
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ url_for('riwayat') }}">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                        Riwayat Peminjaman
+                    <a href="{{ url_for('kelola_pengembalian') }}"
+                       class="nav-item {% if request.endpoint == 'kelola_pengembalian' %}active{% endif %}">
+                        <i class="ti ti-rotate-clockwise"></i>
+                        Pengembalian
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa-solid fa-heart"></i>
-                        Favorit
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ url_for('pengaturan') }}">
-                        <i class="fa-solid fa-gear"></i>
+                    <a href="{{ url_for('pengaturan_admin') }}"
+                       class="nav-item {% if request.endpoint == 'pengaturan_admin' %}active{% endif %}">
+                        <i class="ti ti-settings"></i>
                         Pengaturan
                     </a>
                 </li>
 
-            </ul>
+                <li>
+                    <a href="{{ url_for('laporan') }}"
+                       class="nav-item {% if request.endpoint == 'laporan' %}active{% endif %}">
+                        <i class="ti ti-file-text"></i>
+                        Laporan
+                    </a>
+                </li>
 
+            </ul>
         </nav>
 
         <div class="sidebar-footer">
-
-            <a href="{{ url_for('logout') }}">
-                <i class="fa-solid fa-right-from-bracket"></i>
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="ti ti-logout"></i>
                 Keluar
             </a>
-
         </div>
 
     </aside>

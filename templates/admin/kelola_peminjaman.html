@@ -1,0 +1,252 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Kelola Peminjaman{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="topbar">
+        <div class="search-box">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="Cari buku, anggota, peminjaman...">
+        </div>
+
+        <div class="topbar-right">
+            <div class="notif-btn">
+                <i class="ti ti-bell"></i>
+                <div class="notif-dot"></div>
+            </div>
+
+            <div class="profile-chip">
+                <div class="admin-avatar">{{ nama[0]|upper }}</div>
+                <span>{{ nama }}</span>
+                <i class="ti ti-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <section class="loan-header">
+        <div class="loan-title">
+            <h1>Peminjaman</h1>
+            <p>Kelola transaksi peminjaman buku di perpustakaan.</p>
+        </div>
+
+        <a href="/tambah_peminjaman" class="btn-new-loan">
+            <i class="ti ti-plus"></i>
+            Peminjaman Baru
+        </a>
+    </section>
+
+    <section class="loan-stats">
+        <div class="loan-stat-card">
+            <div class="loan-stat-icon blue">
+                <i class="ti ti-book"></i>
+            </div>
+            <div>
+                <p>Total Dipinjam</p>
+                <h3>{{ total_dipinjam }}</h3>
+            </div>
+        </div>
+
+        <div class="loan-stat-card">
+            <div class="loan-stat-icon green">
+                <i class="ti ti-clipboard-check"></i>
+            </div>
+            <div>
+                <p>Total Dikembalikan</p>
+                <h3>{{ total_dikembalikan }}</h3>
+            </div>
+        </div>
+
+        <div class="loan-stat-card">
+            <div class="loan-stat-icon purple">
+                <i class="ti ti-calendar"></i>
+            </div>
+            <div>
+                <p>Peminjaman Hari Ini</p>
+                <h3>{{ total_hari_ini }}</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="loan-layout">
+
+        <div class="loan-table-card">
+            <div class="loan-table-header">
+                <h2>Daftar Peminjaman</h2>
+
+                <div class="loan-filter">
+                    <div class="loan-search-small">
+                        <i class="ti ti-search"></i>
+                        <input 
+                            type="text" 
+                            id="searchPeminjaman"
+                            placeholder="Cari ID / buku / anggota...">
+                    </div>
+
+                    <select id="filterStatusPeminjaman">
+                        <option value="semua">Semua Status</option>
+                        <option value="dipinjam">Dipinjam</option>
+                        <option value="dikembalikan">Dikembalikan</option>
+                    </select>
+
+                    <button type="button" id="btnResetPeminjaman">
+                        <i class="ti ti-refresh"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="loan-table" id="tablePeminjaman">
+                    <thead>
+                        <tr>
+                            <th>ID Peminjaman</th>
+                            <th>Buku</th>
+                            <th>Anggota</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for p in peminjaman %}
+                        <tr data-status="{% if p[7] == 'dikembalikan' %}dikembalikan{% else %}dipinjam{% endif %}">
+                            <td>PJM-{{ "%04d"|format(p[0]) }}</td>
+
+                            <td>
+                                <div class="book-cell">
+                                    <div>
+                                        <b>{{ p[3] }}</b>
+                                        <span>{{ p[4] }}</span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="member-cell">
+                                    <img src="https://ui-avatars.com/api/?name={{ p[1] }}&background=e0e7ff&color=1e40af" alt="{{ p[1] }}">
+                                    <div>
+                                        <b>{{ p[1] }}</b>
+                                        <span>{{ p[2] or '-' }}</span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{ p[5].strftime('%d %b %Y') if p[5] else '-' }}</td>
+                            <td>{{ p[6].strftime('%d %b %Y') if p[6] else '-' }}</td>
+
+                            <td>
+                                {% if p[7] == 'dikembalikan' %}
+                                    <span class="status-badge green">Dikembalikan</span>
+                                {% else %}
+                                    <span class="status-badge blue">Dipinjam</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="action-cell">
+                                    <a href="#"><i class="ti ti-eye"></i></a>
+                                    <a href="/edit_peminjaman/{{ p[0] }}">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                    <a href="#"><i class="ti ti-dots-vertical"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="empty-table">
+                                Belum ada data peminjaman.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <p id="emptySearchPeminjaman" class="empty-table" style="display:none; padding:18px;">
+                    Data peminjaman tidak ditemukan.
+                </p>
+            </div>
+        </div>
+
+        <aside class="loan-side">
+            <div class="loan-side-card">
+                <h3>Ringkasan Peminjaman</h3>
+
+                <div class="summary-row">
+                    <span>Peminjaman Aktif</span>
+                    <b class="blue-text">{{ total_dipinjam }}</b>
+                </div>
+
+                <div class="summary-row">
+                    <span>Dikembalikan</span>
+                    <b class="green-text">{{ total_dikembalikan }}</b>
+                </div>
+
+                <div class="summary-row">
+                    <span>Total Transaksi</span>
+                    <b>{{ total_transaksi }}</b>
+                </div>
+            </div>
+        </aside>
+
+    </section>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchPeminjaman');
+    const statusFilter = document.getElementById('filterStatusPeminjaman');
+    const resetButton = document.getElementById('btnResetPeminjaman');
+    const table = document.getElementById('tablePeminjaman');
+    const emptyText = document.getElementById('emptySearchPeminjaman');
+
+    if (!searchInput || !statusFilter || !table) return;
+
+    function filterPeminjaman() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+        const rows = table.querySelectorAll('tbody tr');
+        let visibleCount = 0;
+
+        rows.forEach(function (row) {
+            if (row.querySelector('.empty-table')) {
+                return;
+            }
+
+            const rowText = row.textContent.toLowerCase();
+            const rowStatus = row.dataset.status;
+
+            const matchKeyword = rowText.includes(keyword);
+            const matchStatus = selectedStatus === 'semua' || rowStatus === selectedStatus;
+
+            if (matchKeyword && matchStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (emptyText) {
+            emptyText.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    }
+
+    searchInput.addEventListener('input', filterPeminjaman);
+    statusFilter.addEventListener('change', filterPeminjaman);
+
+    resetButton.addEventListener('click', function () {
+        searchInput.value = '';
+        statusFilter.value = 'semua';
+        filterPeminjaman();
+    });
+});
+</script>
+
+{% endblock %}

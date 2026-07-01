@@ -1,0 +1,173 @@
+{% extends 'base/base_member.html' %}
+
+{% block title %}Detail Buku{% endblock %}
+
+{% block content %}
+
+<main class="member-main">
+
+    <div class="detail-book-layout">
+
+        <section class="detail-book-main">
+
+            <div class="breadcrumb">
+                <a href="/dashboard_user">Beranda</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="/daftar_buku">Buku</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Detail Buku</span>
+            </div>
+
+            <div class="detail-hero-card">
+
+                <div class="detail-cover">
+                    {% if buku[10] %}
+                        <img src="{{ url_for('static', filename='images/books/' ~ buku[10]) }}" alt="{{ buku[1] }}">
+                    {% else %}
+                        <div class="empty-cover">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="detail-info">
+                    <span class="detail-category">{{ buku[8] or buku[7] or 'Umum' }}</span>
+
+                    <h1>{{ buku[1] }}</h1>
+
+                    <p class="detail-subtitle">{{ buku[9] or 'Tidak ada deskripsi singkat.' }}</p>
+
+                    <div class="detail-meta">
+                        <span><i class="fa-regular fa-user"></i> {{ buku[2] or '-' }}</span>
+                        <span><i class="fa-regular fa-calendar"></i> {{ buku[4] or '-' }}</span>
+                        <span><i class="fa-solid fa-language"></i> {{ buku[6] or '-' }}</span>
+                    </div>
+
+                    <p class="detail-description">
+                        {{ buku[9] or 'Deskripsi buku belum tersedia.' }}
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="detail-tabs-card">
+                <div class="detail-tabs">
+                    <button class="active">Deskripsi</button>
+                </div>
+
+                <div class="detail-tab-content">
+                    <h3>Tentang Buku</h3>
+
+                    <p>
+                        {{ buku[9] or 'Belum ada deskripsi lengkap untuk buku ini.' }}
+                    </p>
+
+                    {% if buku[18] %}
+                    <div class="tags-box">
+                        <h4>Tags</h4>
+                        <p>{{ buku[18] }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="detail-book-side">
+
+            <div class="side-card detail-stock-card">
+                <h3>Ketersediaan</h3>
+
+                {% if buku[12] and buku[12] > 0 %}
+                    <div class="stock-alert available-stock">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div>
+                            <strong>Tersedia</strong>
+                            <span>Buku ini siap untuk dipinjam.</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="stock-alert empty-stock">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <div>
+                            <strong>Tidak Tersedia</strong>
+                            <span>Stok buku sedang habis.</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="stock-row">
+                    <span>Total Eksemplar</span>
+                    <strong>{{ buku[11] or 0 }}</strong>
+                </div>
+
+                <div class="stock-row">
+                    <span>Tersedia</span>
+                    <strong>{{ buku[12] or 0 }}</strong>
+                </div>
+
+                <div class="stock-row">
+                    <span>Sedang Dipinjam</span>
+                    <strong>{{ (buku[11] or 0) - (buku[12] or 0) }}</strong>
+                </div>
+            </div>
+
+            <div class="side-card detail-book-data">
+                <h3>Informasi Buku</h3>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-barcode"></i>
+                    <span>ISBN</span>
+                    <strong>{{ buku[5] or '-' }}</strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Penerbit</span>
+                    <strong>{{ buku[3] or '-' }}</strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Kategori</span>
+                    <strong>{{ buku[7] or '-' }}</strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>Genre</span>
+                    <strong>{{ buku[8] or '-' }}</strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Rak</span>
+                    <strong>{{ buku[14] or '-' }}</strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-ruler-combined"></i>
+                    <span>Dimensi</span>
+                    <strong>
+                        {% if buku[15] and buku[16] and buku[17] %}
+                            {{ buku[15] }} x {{ buku[16] }} x {{ buku[17] }} cm
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="book-data-row">
+                    <i class="fa-solid fa-weight-hanging"></i>
+                    <span>Berat</span>
+                    <strong>{{ buku[18] or '-' }} gram</strong>
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+{% endblock %}

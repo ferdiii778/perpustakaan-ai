@@ -1,0 +1,187 @@
+{% extends 'base/base_member.html' %}
+
+{% block title %}Riwayat Peminjaman{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/riwayat.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="history-page">
+
+    <div class="history-header">
+        <div>
+            <h1>Riwayat Peminjaman</h1>
+            <p>Lihat daftar buku yang pernah kamu pinjam dan tanggal jatuh tempo pengembaliannya.</p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-icon blue">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <div>
+                <p>Total Peminjaman</p>
+                <h2>{{ total_peminjaman }}</h2>
+                <span>Buku</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon green">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div>
+                <p>Buku Dipinjam</p>
+                <h2>{{ buku_dipinjam }}</h2>
+                <span>Buku</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon orange">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+                <p>Jatuh Tempo Terdekat</p>
+                {% if jatuh_tempo %}
+                    <h2>{{ jatuh_tempo[3].strftime('%d %b %Y') }}</h2>
+                    <span>Segera dikembalikan</span>
+                {% else %}
+                    <h2>-</h2>
+                    <span>Tidak ada</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon red">
+                <i class="fa-solid fa-sack-dollar"></i>
+            </div>
+            <div>
+                <p>Total Denda</p>
+                <h2>Rp {{ "{:,.0f}".format(total_denda).replace(",", ".") }}</h2>
+                <span>Belum dibayar</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-layout">
+
+        <div class="history-table-card">
+            <h3>Daftar Riwayat Peminjaman</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Buku</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Tanggal Kembali</th>
+                        <th>Denda</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for r in riwayat %}
+                    <tr>
+                        <td>
+                            <div class="book-cell">
+                                {% if r[3] %}
+                                    <img src="{{ url_for('static', filename='images/books/' ~ r[3]) }}">
+                                {% else %}
+                                    <div class="cover-empty">No</div>
+                                {% endif %}
+                                <div>
+                                    <strong>{{ r[1] }}</strong>
+                                    <span>{{ r[2] }}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>{{ r[4].strftime('%d %b %Y') }}</td>
+                        <td>{{ r[5].strftime('%d %b %Y') }}</td>
+                        <td>
+                            {% if r[6] %}
+                                {{ r[6].strftime('%d %b %Y') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>Rp {{ "{:,.0f}".format(r[7]).replace(",", ".") }}</td>
+                        <td>
+                            {% if r[8] == 'terlambat' %}
+                                <span class="badge danger">Terlambat</span>
+                            {% elif r[8] == 'dikembalikan' %}
+                                <span class="badge success">Selesai</span>
+                            {% else %}
+                                <span class="badge warning">Dipinjam</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty">Belum ada riwayat peminjaman.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p class="table-info">Menampilkan {{ riwayat|length }} data peminjaman</p>
+        </div>
+
+        <div class="side-panel">
+
+            <div class="side-card">
+                <h3>Jatuh Tempo Terdekat</h3>
+
+                {% if jatuh_tempo %}
+                <div class="due-book">
+                    {% if jatuh_tempo[2] %}
+                        <img src="{{ url_for('static', filename='images/books/' ~ jatuh_tempo[2]) }}">
+                    {% endif %}
+                    <div>
+                        <strong>{{ jatuh_tempo[0] }}</strong>
+                        <span>{{ jatuh_tempo[1] }}</span>
+                        <p>Jatuh tempo</p>
+                        <b>{{ jatuh_tempo[3].strftime('%d %b %Y') }}</b>
+                    </div>
+                </div>
+                {% else %}
+                    <p class="muted">Tidak ada buku yang sedang dipinjam.</p>
+                {% endif %}
+            </div>
+
+            <div class="side-card">
+                <h3>Informasi Denda</h3>
+
+                <div class="fine-row">
+                    <span>Total Denda</span>
+                    <b>Rp {{ "{:,.0f}".format(total_denda).replace(",", ".") }}</b>
+                </div>
+
+                <div class="fine-row">
+                    <span>Belum Dibayar</span>
+                    <b class="text-red">Rp {{ "{:,.0f}".format(total_denda).replace(",", ".") }}</b>
+                </div>
+            </div>
+
+            <div class="side-card">
+                <h3>Aturan Peminjaman</h3>
+                <ul class="rules">
+                    <li>Durasi pinjam buku maksimal 7 hari</li>
+                    <li>Denda keterlambatan Rp 1.000 / hari / buku</li>
+                    <li>Pastikan buku dikembalikan tepat waktu</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

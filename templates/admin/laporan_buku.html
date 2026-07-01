@@ -1,0 +1,253 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Laporan Buku{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <div class="book-report-header">
+        <div>
+            <h1>Laporan Buku</h1>
+            <p>Dashboard > Laporan > Laporan Buku</p>
+        </div>
+
+        <div class="book-report-actions">
+            <div class="search-box">
+                <i class="ti ti-search"></i>
+                <input id="searchBookInput" type="text" placeholder="Cari buku, penulis, kategori...">
+            </div>
+            <a href="{{ url_for('export_laporan_buku_excel') }}" class="btn-export green">
+                <i class="ti ti-file-spreadsheet"></i> Export Excel
+            </a>
+        </div>
+    </div>
+
+    <div class="book-filter-row">
+        <select><option>01 Mei 2024 - 31 Mei 2024</option></select>
+        <select><option>Semua Kategori</option></select>
+        <select><option>Semua Status</option></select>
+    </div>
+
+    <div class="book-report-stats">
+        <div class="book-stat-card purple">
+            <i class="ti ti-book"></i>
+            <div>
+                <span>Total Buku</span>
+                <h2>1.248</h2>
+                <p>Total seluruh buku</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card blue">
+            <i class="ti ti-file-text"></i>
+            <div>
+                <span>Total Judul</span>
+                <h2>856</h2>
+                <p>Judul buku berbeda</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card green">
+            <i class="ti ti-stack-3"></i>
+            <div>
+                <span>Stok Tersedia</span>
+                <h2>1.120</h2>
+                <p>Buku siap dipinjam</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card orange">
+            <i class="ti ti-alert-triangle"></i>
+            <div>
+                <span>Rusak / Hilang</span>
+                <h2>18</h2>
+                <p>Buku tidak tersedia</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-chart-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Penambahan Buku per Bulan</h3>
+            </div>
+            <canvas id="bookLineChart" height="120"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Distribusi Kategori Buku</h3>
+            </div>
+            <canvas id="bookDoughnutChart" height="120"></canvas>
+        </div>
+    </div>
+
+    <div class="book-bottom-grid">
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Data Buku</h3>
+            </div>
+
+            <table class="book-report-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Cover</th>
+                        <th>Judul Buku</th>
+                        <th>Kategori</th>
+                        <th>Stok</th>
+                        <th>Dipinjam</th>
+                        <th>Tersedia</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><div class="mini-cover">AH</div></td>
+                        <td><b>Atomic Habits</b><span>James Clear</span></td>
+                        <td><span class="badge purple">Pengembangan Diri</span></td>
+                        <td>15</td>
+                        <td>8</td>
+                        <td>7</td>
+                        <td><span class="badge green">Tersedia</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td><div class="mini-cover cyan">LB</div></td>
+                        <td><b>Laut Bercerita</b><span>Leila S. Chudori</span></td>
+                        <td><span class="badge blue">Fiksi</span></td>
+                        <td>12</td>
+                        <td>12</td>
+                        <td>0</td>
+                        <td><span class="badge red">Habis</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td><div class="mini-cover dark">84</div></td>
+                        <td><b>1984</b><span>George Orwell</span></td>
+                        <td><span class="badge blue">Fiksi</span></td>
+                        <td>10</td>
+                        <td>6</td>
+                        <td>4</td>
+                        <td><span class="badge green">Tersedia</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>4</td>
+                        <td><div class="mini-cover gray">BM</div></td>
+                        <td><b>Bumi</b><span>Tere Liye</span></td>
+                        <td><span class="badge blue">Fiksi</span></td>
+                        <td>20</td>
+                        <td>18</td>
+                        <td>2</td>
+                        <td><span class="badge amber">Stok Menipis</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="book-side">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Buku Terpopuler</h3>
+                    <a href="#">Lihat semua →</a>
+                </div>
+
+                <div class="simple-rank">
+                    <div><b>1</b><span>Atomic Habits</span><small>78 kali dipinjam</small></div>
+                    <div><b>2</b><span>Laut Bercerita</span><small>65 kali dipinjam</small></div>
+                    <div><b>3</b><span>1984</span><small>58 kali dipinjam</small></div>
+                    <div><b>4</b><span>Bumi</span><small>54 kali dipinjam</small></div>
+                    <div><b>5</b><span>Rich Dad Poor Dad</span><small>48 kali dipinjam</small></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Kategori Terbanyak</h3>
+                    <a href="#">Lihat semua →</a>
+                </div>
+
+                <div class="category-list">
+                    <div><span>Teknologi</span><b>320 Buku</b></div>
+                    <div><span>Fiksi</span><b>280 Buku</b></div>
+                    <div><span>Pendidikan</span><b>250 Buku</b></div>
+                    <div><span>Pengembangan Diri</span><b>200 Buku</b></div>
+                    <div><span>Agama</span><b>140 Buku</b></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+
+new Chart(document.getElementById('bookLineChart'), {
+    type: 'line',
+    data: {
+        labels: ['Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
+        datasets: [{
+            label: 'Buku Baru',
+            data: [120, 150, 180, 210, 160, 200],
+            borderColor: '#6d5dfc',
+            backgroundColor: 'rgba(109,93,252,.10)',
+            fill: true,
+            tension: .4,
+            pointRadius: 4
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true },
+            x: { grid: { color: '#eef2f7' } }
+        }
+    }
+});
+
+new Chart(document.getElementById('bookDoughnutChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Fiksi', 'Non Fiksi', 'Teknologi', 'Pendidikan', 'Agama', 'Sejarah'],
+        datasets: [{
+            data: [320, 280, 240, 200, 140, 68],
+            backgroundColor: ['#2563eb','#22c55e','#8b5cf6','#f59e0b','#ef4444','#06b6d4'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        cutout: '62%',
+        plugins: { legend: { position: 'right' } }
+    }
+});
+</script>
+
+<script>
+const searchBookInput = document.getElementById('searchBookInput');
+const bookRows = document.querySelectorAll('.book-report-table tbody tr');
+
+searchBookInput.addEventListener('keyup', function () {
+    const keyword = this.value.toLowerCase().trim();
+
+    bookRows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+
+        if (rowText.includes(keyword)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

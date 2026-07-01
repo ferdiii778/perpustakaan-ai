@@ -5,13 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login Perpustakaan</title>
+<title>Login Perpustakaan SMA Al Irsyad Tegal</title>
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@500;600;700&display=swap">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/login.css') }}">
 
 </head>
 <body>
@@ -23,7 +27,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
         <div class="logo-area">
 
-            <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Perpustakaan SMA Al Irsyad Tegal">
 
             <div>
                 <h3>PERPUSTAKAAN</h3>
@@ -34,6 +38,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
         <div class="quote">
 
+            <span class="eyebrow">Portal Anggota</span>
+
             <h1>
                 Buku adalah jendela dunia.
                 Membaca adalah kunci untuk
@@ -42,12 +48,35 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
             <div class="line"></div>
 
+            <ul class="features">
+                <li><i class="fa-solid fa-book"></i> Koleksi lengkap &amp; terkini</li>
+                <li><i class="fa-solid fa-clock"></i> Akses katalog 24 jam</li>
+                <li><i class="fa-solid fa-magnifying-glass"></i> Pencarian buku lebih cepat</li>
+            </ul>
+
         </div>
 
-        <img
-        class="library-image"
-        src="{{ url_for('static', filename='images/background.jpeg') }}"
-        alt="Library">
+        <div class="illustration" aria-hidden="true">
+            <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                <g class="sparkles">
+                    <circle cx="200" cy="34" r="4" class="sparkle sparkle-1"></circle>
+                    <circle cx="168" cy="18" r="2.6" class="sparkle sparkle-2"></circle>
+                    <circle cx="234" cy="14" r="3.2" class="sparkle sparkle-3"></circle>
+                    <circle cx="252" cy="40" r="2" class="sparkle sparkle-1"></circle>
+                    <circle cx="150" cy="42" r="2" class="sparkle sparkle-2"></circle>
+                </g>
+
+                <path class="page page-left" d="M200,70 C140,75 70,96 38,132 L38,186 C70,160 140,150 200,150 Z"></path>
+                <path class="page page-right" d="M200,70 C260,75 330,96 362,132 L362,186 C330,160 260,150 200,150 Z"></path>
+
+                <path class="fold" d="M200,86 C155,90 100,108 56,138"></path>
+                <path class="fold" d="M200,86 C245,90 300,108 344,138"></path>
+
+                <line class="spine" x1="200" y1="70" x2="200" y2="150"></line>
+
+                <path class="bookmark" d="M268,70 L290,70 L290,118 L279,106 L268,118 Z"></path>
+            </svg>
+        </div>
 
     </div>
 
@@ -56,6 +85,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     <div class="right">
 
         <div class="login-card">
+
+            <div class="mobile-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Perpustakaan SMA Al Irsyad Tegal">
+                <span>Perpustakaan SMA Al Irsyad Tegal</span>
+            </div>
 
             <div class="icon">
                 <i class="fa-solid fa-book-open"></i>
@@ -69,38 +103,65 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
             </p>
 
             <!-- Pesan Login -->
+            {% set alert_icons = {
+                'success': 'fa-circle-check',
+                'error': 'fa-circle-exclamation',
+                'danger': 'fa-circle-exclamation',
+                'warning': 'fa-triangle-exclamation',
+                'info': 'fa-circle-info'
+            } %}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
+                    <div class="alert-stack">
                     {% for category, message in messages %}
-                        <div class="alert">
-                            {{ message }}
+                        {% set cat = category if category in alert_icons else 'info' %}
+                        <div class="alert alert-{{ 'error' if cat == 'danger' else cat }}" role="alert">
+                            <i class="fa-solid {{ alert_icons[cat] }}"></i>
+                            <span>{{ message }}</span>
                         </div>
                     {% endfor %}
+                    </div>
                 {% endif %}
             {% endwith %}
 
             <!-- Form Login -->
-            <form action="/proses_login" method="POST">
+            <form action="/proses_login" method="POST" novalidate>
 
-                <label>Email</label>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="nama@email.com"
+                        autocomplete="email"
+                        autofocus
+                        required>
+                    </div>
+                </div>
 
-                <input
-                type="email"
-                name="email"
-                placeholder="Masukkan email Anda"
-                required>
-
-                <label>Password</label>
-
-                <input
-                type="password"
-                name="password"
-                placeholder="Masukkan password Anda"
-                required>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Masukkan password Anda"
+                        autocomplete="current-password"
+                        required>
+                        <button type="button" class="toggle-password" data-target="password" aria-label="Tampilkan password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
 
                 <div class="options">
 
-                    <label>
+                    <label class="remember">
                         <input type="checkbox" name="ingat_saya">
                         Ingat Saya
                     </label>
@@ -111,27 +172,32 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
                 </div>
 
-                <button type="submit">
+                <button type="submit" class="btn-submit">
                     Login
                 </button>
 
             </form>
-
-            <div class="divider">
-                Belum punya akun?
-            </div>
-
-            <button
-            class="register"
-            onclick="window.location.href='/register'">
-                Register di sini
-            </button>
 
         </div>
 
     </div>
 
 </div>
+
+<script>
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var input = document.getElementById(btn.dataset.target);
+            var icon = btn.querySelector('i');
+            var isHidden = input.type === 'password';
+
+            input.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isHidden);
+            icon.classList.toggle('fa-eye-slash', isHidden);
+            btn.setAttribute('aria-label', isHidden ? 'Sembunyikan password' : 'Tampilkan password');
+        });
+    });
+</script>
 
 </body>
 </html>

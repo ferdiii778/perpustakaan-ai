@@ -1,0 +1,184 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}
+    {% if mode == 'edit' %}Edit Peminjaman{% else %}Tambah Peminjaman{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <form
+        action="{% if mode == 'edit' %}/update_peminjaman/{{ peminjaman[0] }}{% else %}/simpan_peminjaman{% endif %}"
+        method="POST"
+        class="loan-form-page"
+    >
+
+        <div class="loan-form-header">
+            <h1>{% if mode == 'edit' %}Edit Peminjaman{% else %}Peminjaman Baru{% endif %}</h1>
+            <a href="/kelola_peminjaman" class="close-loan">
+                <i class="ti ti-x"></i>
+            </a>
+        </div>
+
+        <section class="loan-form-grid">
+
+            <div class="loan-select-card">
+                <h3>1. Pilih Anggota</h3>
+
+                <div class="loan-input-search">
+                    <input type="text" placeholder="Cari anggota (nama, NIS, email, no HP)...">
+                    <i class="ti ti-search"></i>
+                </div>
+
+                {% for a in anggota %}
+                <label class="select-item-card">
+                    <input
+                        type="radio"
+                        name="id_user"
+                        value="{{ a[0] }}"
+                        {% if mode == 'edit' and peminjaman[1] == a[0] %}checked{% endif %}
+                        required
+                    >
+
+                    <div class="select-avatar">
+                        {{ a[1][0]|upper }}
+                    </div>
+
+                    <div class="select-info">
+                        <b>{{ a[1] }}</b>
+                        <span>NIS : {{ a[3] or '-' }}</span>
+                        <span>Kelas : {{ a[4] or '-' }}</span>
+                    </div>
+
+                    <small class="active-label">Aktif</small>
+                </label>
+                {% endfor %}
+
+                <div class="quota-box">
+                    <div>
+                        <span>Maksimal Peminjaman</span>
+                        <b>3 Buku</b>
+                    </div>
+                    <div>
+                        <span>Sedang Dipinjam</span>
+                        <b>0 Buku</b>
+                    </div>
+                    <div class="green">
+                        <span>Sisa Kuota</span>
+                        <b>3 Buku</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loan-select-card">
+                <h3>2. Pilih Buku</h3>
+
+                <div class="loan-input-search">
+                    <input type="text" placeholder="Cari buku (judul, penulis, ISBN)...">
+                    <i class="ti ti-search"></i>
+                </div>
+
+                {% for b in buku %}
+                <label class="select-book-card">
+                    <input
+                        type="radio"
+                        name="id_buku"
+                        value="{{ b[0] }}"
+                        {% if mode == 'edit' and peminjaman[2] == b[0] %}checked{% endif %}
+                        required
+                    >
+
+                    <img src="{{ url_for('static', filename='images/books/' + b[5]) if b[5] else 'https://via.placeholder.com/90x130?text=No+Cover' }}" alt="{{ b[1] }}">
+
+                    <div>
+                        <b>{{ b[1] }}</b>
+                        <span>{{ b[2] }}</span>
+                        <span>Kategori: {{ b[3] }}</span>
+                        <p>Stok Tersedia: <strong>{{ b[4] }} eksemplar</strong></p>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+
+        </section>
+
+        <section class="loan-date-grid">
+            <div class="form-group">
+                <label>Tanggal Pinjam <b>*</b></label>
+                <input
+                    type="date"
+                    name="tanggal_pinjam"
+                    id="tanggal_pinjam"
+                    value="{{ peminjaman[3] if mode == 'edit' else '' }}"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Tanggal Jatuh Tempo <b>*</b></label>
+                <input
+                    type="date"
+                    name="tanggal_jatuh_tempo"
+                    id="tanggal_jatuh_tempo"
+                    value="{{ peminjaman[4] if mode == 'edit' else '' }}"
+                    required
+                >
+                <small>Durasi mengikuti tanggal pinjam</small>
+            </div>
+
+            <div class="form-group">
+                <label>Durasi</label>
+                <select name="durasi_hari" id="durasi_hari">
+                    <option value="7" {% if mode == 'edit' and peminjaman[5] == 7 %}selected{% endif %}>7 Hari</option>
+                    <option value="14" {% if mode == 'edit' and peminjaman[5] == 14 %}selected{% endif %}>14 Hari</option>
+                    <option value="30" {% if mode == 'edit' and peminjaman[5] == 30 %}selected{% endif %}>30 Hari</option>
+                </select>
+            </div>
+        </section>
+
+        <div class="form-group">
+            <label>Catatan (Opsional)</label>
+            <textarea name="catatan" maxlength="255" placeholder="Masukkan catatan jika ada...">{% if mode == 'edit' %}{{ peminjaman[6] or '' }}{% endif %}</textarea>
+        </div>
+
+        <div class="loan-form-actions">
+            <a href="/kelola_peminjaman" class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-save-loan">
+                {% if mode == 'edit' %}Update{% else %}Simpan{% endif %}
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+const pinjam = document.getElementById('tanggal_pinjam');
+const jatuhTempo = document.getElementById('tanggal_jatuh_tempo');
+const durasi = document.getElementById('durasi_hari');
+
+function setDefaultDate() {
+    const today = new Date();
+    const due = new Date();
+    due.setDate(today.getDate() + parseInt(durasi.value));
+
+    pinjam.value = today.toISOString().split('T')[0];
+    jatuhTempo.value = due.toISOString().split('T')[0];
+}
+
+function updateDueDate() {
+    if (!pinjam.value) return;
+
+    const start = new Date(pinjam.value);
+    start.setDate(start.getDate() + parseInt(durasi.value));
+    jatuhTempo.value = start.toISOString().split('T')[0];
+}
+
+if (!pinjam.value) {
+    setDefaultDate();
+}
+
+pinjam.addEventListener('change', updateDueDate);
+durasi.addEventListener('change', updateDueDate);
+</script>
+{% endblock %}

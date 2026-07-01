@@ -1,0 +1,241 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Laporan Denda{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <div class="book-report-header">
+        <div>
+            <h1>Laporan Denda</h1>
+            <p>Kelola dan lihat laporan denda keterlambatan buku.</p>
+        </div>
+
+        <div class="book-report-actions">
+            <div class="search-box">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Cari buku, anggota, peminjaman...">
+            </div>
+
+            <!-- <button class="btn-export red"><i class="ti ti-file-type-pdf"></i> Export PDF</button> -->
+            <a href="{{ url_for('export_laporan_denda_excel') }}" class="btn-export green">
+                <i class="ti ti-file-spreadsheet"></i> Export Excel
+            </a>
+        </div>
+    </div>
+
+    <div class="report-tabs">
+        <a href="{{ url_for('laporan') }}" class="report-tab">Rekap Peminjaman Buku</a>
+        <a href="{{ url_for('laporan_buku') }}" class="report-tab">Laporan Buku</a>
+        <a href="{{ url_for('laporan_denda') }}" class="report-tab active">Laporan Denda</a>
+        <a href="{{ url_for('rekap_koleksi') }}" class="report-tab">Rekap Koleksi Buku</a>
+    </div>
+
+    <div class="book-filter-row">
+        <select><option>01 Mei 2024 - 31 Mei 2024</option></select>
+        <select><option>Semua Status Pembayaran</option></select>
+        <select><option>Semua Anggota</option></select>
+    </div>
+
+    <div class="book-report-stats">
+        <div class="book-stat-card purple">
+            <i class="ti ti-wallet"></i>
+            <div>
+                <span>Total Denda</span>
+                <h2>Rp 1.250.000</h2>
+                <p>Total seluruh denda</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card green">
+            <i class="ti ti-circle-check"></i>
+            <div>
+                <span>Denda Dibayar</span>
+                <h2>Rp 950.000</h2>
+                <p>Total denda yang sudah dibayar</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card orange">
+            <i class="ti ti-clock"></i>
+            <div>
+                <span>Belum Dibayar</span>
+                <h2>Rp 300.000</h2>
+                <p>Total denda belum dibayar</p>
+            </div>
+        </div>
+
+        <div class="book-stat-card red">
+            <i class="ti ti-shield-exclamation"></i>
+            <div>
+                <span>Kasus Keterlambatan</span>
+                <h2>156</h2>
+                <p>Total kasus keterlambatan</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-chart-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Grafik Pendapatan Denda</h3>
+            </div>
+            <canvas id="fineLineChart" height="120"></canvas>
+        </div>
+
+        <div class="card fine-status-card">
+            <div class="card-header">
+                <h3>Status Pembayaran Denda</h3>
+            </div>
+            <canvas id="fineDoughnutChart" height="120"></canvas>
+        </div>
+    </div>
+
+    <div class="book-bottom-grid">
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Data Denda</h3>
+            </div>
+
+            <table class="book-report-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID Denda</th>
+                        <th>Anggota</th>
+                        <th>Buku</th>
+                        <th>Terlambat</th>
+                        <th>Denda</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>DN-0001</td>
+                        <td><b>Ahmad Fadli</b><span>XI IPA 1</span></td>
+                        <td>Atomic Habits</td>
+                        <td class="red-text">3 Hari</td>
+                        <td>Rp 3.000</td>
+                        <td><span class="badge green">Lunas</span></td>
+                        <td>15 Mei 2024</td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>DN-0002</td>
+                        <td><b>Siti Aisyah</b><span>XI IPS 2</span></td>
+                        <td>Laut Bercerita</td>
+                        <td class="red-text">5 Hari</td>
+                        <td>Rp 5.000</td>
+                        <td><span class="badge amber">Sebagian</span></td>
+                        <td>15 Mei 2024</td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td>DN-0003</td>
+                        <td><b>Budi Santoso</b><span>XII IPA 2</span></td>
+                        <td>1984</td>
+                        <td class="red-text">2 Hari</td>
+                        <td>Rp 2.000</td>
+                        <td><span class="badge green">Lunas</span></td>
+                        <td>14 Mei 2024</td>
+                    </tr>
+
+                    <tr>
+                        <td>4</td>
+                        <td>DN-0004</td>
+                        <td><b>Rina Marlina</b><span>X IPS 1</span></td>
+                        <td>Bumi</td>
+                        <td class="red-text">7 Hari</td>
+                        <td>Rp 7.000</td>
+                        <td><span class="badge red">Belum Bayar</span></td>
+                        <td>14 Mei 2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="book-side">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Anggota Terbanyak Denda</h3>
+                    <a href="#">Lihat semua →</a>
+                </div>
+
+                <div class="category-list">
+                    <div><span>Ahmad Fadli</span><b>Rp 45.000</b></div>
+                    <div><span>Siti Aisyah</span><b>Rp 32.000</b></div>
+                    <div><span>Budi Santoso</span><b>Rp 28.000</b></div>
+                    <div><span>Dimas Pratama</span><b>Rp 25.000</b></div>
+                    <div><span>Rina Marlina</span><b>Rp 20.000</b></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Buku Paling Sering Terlambat</h3>
+                    <a href="#">Lihat semua →</a>
+                </div>
+
+                <div class="category-list">
+                    <div><span>Atomic Habits</span><b>23 kali</b></div>
+                    <div><span>Laut Bercerita</span><b>19 kali</b></div>
+                    <div><span>1984</span><b>15 kali</b></div>
+                    <div><span>Bumi</span><b>14 kali</b></div>
+                    <div><span>Psychology of Money</span><b>12 kali</b></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+
+new Chart(document.getElementById('fineLineChart'), {
+    type: 'line',
+    data: {
+        labels: ['Des 2023', 'Jan 2024', 'Feb 2024', 'Mar 2024', 'Apr 2024', 'Mei 2024'],
+        datasets: [{
+            label: 'Pendapatan Denda',
+            data: [120000, 150000, 180000, 230000, 160000, 210000],
+            borderColor: '#7c3aed',
+            backgroundColor: 'rgba(124,58,237,.10)',
+            fill: true,
+            tension: .4,
+            pointRadius: 4
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true },
+            x: { grid: { color: '#eef2f7' } }
+        }
+    }
+});
+
+new Chart(document.getElementById('fineDoughnutChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Sudah Dibayar', 'Belum Dibayar'],
+        datasets: [{
+            data: [950000, 300000],
+            backgroundColor: ['#16a34a', '#ef4444'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        cutout: '62%',
+        plugins: { legend: { position: 'right' } }
+    }
+});
+</script>
+{% endblock %}
