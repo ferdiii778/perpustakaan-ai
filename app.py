@@ -1384,72 +1384,59 @@ def export_laporan_buku_excel():
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
 
+def ambil_kata_kunci(query):
+    query = query.lower().replace('?', '').replace('!', '').replace(',', '')
+
+    if 'tema ' in query:
+        return query.split('tema ', 1)[1].split()[0]
+
+    if 'tentang ' in query:
+        return query.split('tentang ', 1)[1].split()[0]
+
+    return query.strip()
+
 @app.route('/proses_rekomendasi_ai', methods=['POST'])
 def proses_rekomendasi_ai():
     if 'login' not in session:
         return redirect('/')
 
-    query = request.form.get('query', '').strip().lower()
+    query_asli = request.form.get('query', '').strip().lower()
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT *
-        FROM buku
-        ORDER BY id_buku DESC
-    """)
+    cursor.execute("SELECT * FROM buku")
     semua_buku = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
 
     hasil = []
 
-    for buku in semua_buku:
-        judul = str(buku[1] or '').lower()
-        penulis = str(buku[2] or '').lower()
-        kategori = str(buku[7] or '').lower()
-        genre = str(buku[8] or '').lower()
-        deskripsi = str(buku[9] or '').lower()
-        tags = str(buku[15] or '').lower()
+    for b in semua_buku:
+        teks_buku = f"""
+        {b[1]} {b[2]} {b[7]} {b[8]} {b[9]} {b[15]}
+        """.lower()
 
-        teks_buku = f"{judul} {penulis} {kategori} {genre} {deskripsi} {tags}"
+        score = 0
+        query_words = query_asli.split()
 
-        skor = 0
+        for w in query_words:
+            if w in teks_buku:
+                score += 1
 
-        for kata in query.split():
-            if kata in judul:
-                skor += 5
-            if kata in kategori:
-                skor += 4
-            if kata in genre:
-                skor += 4
-            if kata in tags:
-                skor += 3
-            if kata in deskripsi:
-                skor += 2
-            if kata in penulis:
-                skor += 1
-
-        if query in teks_buku:
-            skor += 10
-
-        if skor > 0:
-            hasil.append((skor, buku))
+        if score > 0:
+            hasil.append((score, b))
 
     hasil.sort(key=lambda x: x[0], reverse=True)
 
-    rekomendasi = [item[1] for item in hasil[:5]]
+    rekomendasi = [x[1] for x in hasil[:5]]
 
-    if not rekomendasi:
-        rekomendasi = semua_buku[:5]
+    cursor.close()
+    conn.close()
 
     return render_template(
         'member/rekomendasi_ai.html',
         nama=session['nama'],
         role=session['role'],
-        query=query,
+        query=query_asli,
         rekomendasi=rekomendasi
     )
 
