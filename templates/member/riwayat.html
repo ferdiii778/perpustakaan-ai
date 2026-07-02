@@ -91,7 +91,7 @@
                         <td>
                             <div class="book-cell">
                                 {% if r[3] %}
-                                    <img src="{{ url_for('static', filename='images/books/' ~ r[3]) }}">
+                                    <img src="{{ r[3] }}">
                                 {% else %}
                                     <div class="cover-empty">No</div>
                                 {% endif %}
@@ -141,7 +141,7 @@
                 {% if jatuh_tempo %}
                 <div class="due-book">
                     {% if jatuh_tempo[2] %}
-                        <img src="{{ url_for('static', filename='images/books/' ~ jatuh_tempo[2]) }}">
+                        <img src="{{ jatuh_tempo[2] }}">
                     {% endif %}
                     <div>
                         <strong>{{ jatuh_tempo[0] }}</strong>

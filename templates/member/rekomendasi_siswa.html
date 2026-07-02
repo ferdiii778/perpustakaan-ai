@@ -57,7 +57,7 @@
                     <div class="ai-book-card">
                         <div class="ai-book-cover">
                             {% if buku[10] %}
-                                <img src="{{ url_for('static', filename='images/books/' ~ buku[10]) }}" alt="{{ buku[1] }}">
+                                <img src="{{ r[3] }}" alt="{{ buku[1] }}">
                             {% else %}
                                 {{ loop.index }}
                             {% endif %}

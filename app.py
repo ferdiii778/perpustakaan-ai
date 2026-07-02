@@ -6,10 +6,16 @@ from flask import send_file
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from io import BytesIO
+from supabase import create_client
+import psycopg2.extras
 
 
 app = Flask(__name__)
 app.secret_key = "perpustakaan123"
+SUPABASE_URL = "https://gucdxbumigjiqlpbzxbd.supabase.co"
+SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1Y2R4YnVtaWdqaXFscGJ6eGJkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTQzOTc2OSwiZXhwIjoyMDk3MDE1NzY5fQ.90WoraIjPbbslKzR8ZWny_ULtlaeoK_awL4soVgAa_E"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -34,6 +40,24 @@ def get_db_connection():
 def login():
     return render_template('auth/login.html')
 
+def upload_sampul_ke_supabase(file):
+    if not file or file.filename == "":
+        return ""
+
+    nama_file = secure_filename(file.filename)
+    file_path_storage = f"books/{nama_file}"
+    file_bytes = file.read()
+
+    supabase.storage.from_("book-covers").upload(
+        file_path_storage,
+        file_bytes,
+        {
+            "content-type": file.content_type,
+            "upsert": "true"
+        }
+    )
+
+    return supabase.storage.from_("book-covers").get_public_url(file_path_storage)
 
 @app.route('/proses_login', methods=['POST'])
 def proses_login():
@@ -363,9 +387,7 @@ def update_buku(id):
     nama_file = old_data[0]
 
     if file and file.filename != "":
-        nama_file = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], nama_file)
-        file.save(file_path)
+        nama_file = upload_sampul_ke_supabase(file)
 
     cursor.execute("""
         UPDATE buku
@@ -420,12 +442,7 @@ def simpan_buku():
     tags = request.form['tags']
 
     file = request.files.get('sampul')
-    nama_file = ""
-
-    if file and file.filename != "":
-        nama_file = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], nama_file)
-        file.save(file_path)
+    nama_file = upload_sampul_ke_supabase(file)
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -1594,9 +1611,7 @@ def update_anggota(id):
     old_password = old_user[1]
 
     if file and file.filename != "":
-        nama_file = secure_filename(file.filename)
-        file_path = os.path.join(PROFILE_UPLOAD_FOLDER, nama_file)
-        file.save(file_path)
+        nama_file = upload_sampul_ke_supabase(file)
 
     final_password = password if password else old_password
 

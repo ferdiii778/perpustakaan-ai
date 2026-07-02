@@ -138,7 +138,7 @@
                 
                         <img
                             id="coverPreview"
-                            src="{% if mode == 'edit' and buku[10] %}{{ url_for('static', filename='images/books/' ~ buku[10]) }}{% endif %}"
+                            src="{% if mode == 'edit' and buku[10] %}{{ buku[10] }}{% endif %}"
                             class="cover-preview"
                             alt="Preview Sampul"
                             style="{% if mode == 'edit' and buku[10] %}display:block;{% else %}display:none;{% endif %}">

@@ -63,7 +63,7 @@
                     <div class="book-card">
                         <div class="book-cover teacher">
                             {% if buku[10] %}
-                                <img src="{{ url_for('static', filename='images/books/' ~ buku[10]) }}" alt="{{ buku[1] }}">
+                                <img src="{{ buku[10] }}" alt="{{ buku[1] }}">
                             {% else %}
                                 {{ loop.index }}
                             {% endif %}

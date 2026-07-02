@@ -88,7 +88,7 @@
                         required
                     >
 
-                    <img src="{{ url_for('static', filename='images/books/' + b[5]) if b[5] else 'https://via.placeholder.com/90x130?text=No+Cover' }}" alt="{{ b[1] }}">
+                    <img src="{{ b[5] }}" alt="{{ b[1] }}">
 
                     <div>
                         <b>{{ b[1] }}</b>

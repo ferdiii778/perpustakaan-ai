@@ -119,7 +119,7 @@
 
                         <td class="book-cell">
                             {% if p[5] %}
-                                <img src="{{ url_for('static', filename='images/books/' ~ p[5]) }}">
+                                <img src="{{ p[5] }}">
                             {% endif %}
                             <div>
                                 <strong>{{ p[3] }}</strong>

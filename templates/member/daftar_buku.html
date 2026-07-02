@@ -40,7 +40,7 @@
         {% for b in buku %}
         <div class="library-book-card">
             <div class="library-cover">
-                <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                <img src="{{ b[10] }}" alt="{{ b[1] }}">
             </div>
 
             <div class="library-info">

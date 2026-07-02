@@ -4,9 +4,19 @@
 
 {% block content %}
 
+<style>
+    .book-thumb-img {
+        width: 42px;
+        height: 58px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #eef2ff;
+        flex-shrink: 0;
+    }
+</style>
+
 <div class="dashboard-container">
 
-    <!-- TOPBAR -->
     <div class="topbar">
         <div class="search-box">
             <i class="ti ti-search"></i>
@@ -14,10 +24,6 @@
         </div>
 
         <div class="topbar-right">
-            <!-- <div class="notif-btn">
-                <i class="ti ti-bell"></i>
-                <div class="notif-dot"></div>
-            </div> -->
             <div class="profile-chip">
                 <div class="admin-avatar">AD</div>
                 <span>Admin</span>
@@ -26,63 +32,60 @@
         </div>
     </div>
 
-    <!-- PAGE HEADER -->
     <div class="page-header">
         <h2>Dashboard Admin</h2>
         <p>Selamat datang kembali — berikut ringkasan sistem perpustakaan hari ini.</p>
     </div>
 
-    <!-- STAT CARDS -->
     <div class="stats-grid">
 
         <div class="stat-card blue">
             <div class="stat-icon"><i class="ti ti-books"></i></div>
             <div class="stat-label">Total Buku</div>
-            <div class="stat-value">1.248</div>
+            <div class="stat-value">{{ total_buku }}</div>
             <div class="stat-delta up">
-                <i class="ti ti-trending-up"></i> +12 bulan ini
+                <i class="ti ti-trending-up"></i> Data koleksi aktif
             </div>
         </div>
 
         <div class="stat-card green">
-            <div class="stat-icon"><i class="ti ti-users"></i></div>
-            <div class="stat-label">Total Anggota</div>
-            <div class="stat-value">856</div>
+            <div class="stat-icon"><i class="ti ti-books"></i></div>
+            <div class="stat-label">Buku Tersedia</div>
+            <div class="stat-value">{{ tersedia }}</div>
             <div class="stat-delta up">
-                <i class="ti ti-trending-up"></i> +18 bulan ini
+                <i class="ti ti-trending-up"></i> Siap dipinjam
             </div>
         </div>
 
         <div class="stat-card orange">
             <div class="stat-icon"><i class="ti ti-arrow-left-right"></i></div>
             <div class="stat-label">Peminjaman Aktif</div>
-            <div class="stat-value">128</div>
+            <div class="stat-value">0</div>
             <div class="stat-delta up">
-                <i class="ti ti-trending-up"></i> +8 bulan ini
+                <i class="ti ti-trending-up"></i> Belum dihitung
             </div>
         </div>
 
         <div class="stat-card purple">
             <div class="stat-icon"><i class="ti ti-chart-bar"></i></div>
             <div class="stat-label">Total Peminjaman</div>
-            <div class="stat-value">542</div>
+            <div class="stat-value">0</div>
             <div class="stat-delta up">
-                <i class="ti ti-trending-up"></i> +32 bulan ini
+                <i class="ti ti-trending-up"></i> Belum dihitung
             </div>
         </div>
 
         <div class="stat-card red">
             <div class="stat-icon"><i class="ti ti-alert-triangle"></i></div>
             <div class="stat-label">Buku Terlambat</div>
-            <div class="stat-value">15</div>
+            <div class="stat-value">0</div>
             <div class="stat-delta down">
-                <i class="ti ti-trending-down"></i> -3 bulan ini
+                <i class="ti ti-trending-down"></i> Belum dihitung
             </div>
         </div>
 
     </div>
 
-    <!-- CHARTS -->
     <div class="chart-grid">
 
         <div class="chart-card">
@@ -105,73 +108,58 @@
 
     </div>
 
-    <!-- BOTTOM -->
     <div class="bottom-grid">
 
         <div class="card">
             <div class="card-header">
-                <h3>Peminjaman Terbaru</h3>
-                <a href="#">Lihat semua →</a>
+                <h3>Buku Terbaru</h3>
+                <a href="/kelola_buku">Lihat semua →</a>
             </div>
+
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Buku</th>
-                        <th>Anggota</th>
-                        <th>Tanggal</th>
+                        <th>Penulis</th>
+                        <th>Tahun</th>
                         <th>Status</th>
                     </tr>
                 </thead>
+
                 <tbody>
+                    {% for b in buku[:5] %}
                     <tr>
-                        <td class="row-num">01</td>
+                        <td class="row-num">{{ "%02d"|format(loop.index) }}</td>
+
                         <td>
                             <div class="book-cell">
-                                <div class="book-thumb" style="background:#dbeafe;color:#1d4ed8">AB</div>
-                                <span class="book-name">Atomic Habits</span>
+                                <img
+                                    src="{{ b[10] if b[10] else 'https://via.placeholder.com/80x110?text=No+Cover' }}"
+                                    alt="{{ b[1] }}"
+                                    class="book-thumb-img"
+                                    onerror="this.onerror=null; this.src='https://via.placeholder.com/80x110?text=No+Cover';"
+                                >
+                                <span class="book-name">{{ b[1] }}</span>
                             </div>
                         </td>
-                        <td>Ahmad Rizal</td>
-                        <td class="date-text">14 Jun 2025</td>
-                        <td><span class="badge blue"><i class="ti ti-book-open"></i> Dipinjam</span></td>
-                    </tr>
-                    <tr>
-                        <td class="row-num">02</td>
+
+                        <td>{{ b[2] }}</td>
+                        <td class="date-text">{{ b[4] }}</td>
+
                         <td>
-                            <div class="book-cell">
-                                <div class="book-thumb" style="background:#d1fae5;color:#065f46">LB</div>
-                                <span class="book-name">Laut Bercerita</span>
-                            </div>
+                            {% if b[12] and b[12]|int > 0 %}
+                                <span class="badge green"><i class="ti ti-check"></i> Tersedia</span>
+                            {% else %}
+                                <span class="badge amber"><i class="ti ti-clock"></i> Habis</span>
+                            {% endif %}
                         </td>
-                        <td>Siti Rahayu</td>
-                        <td class="date-text">13 Jun 2025</td>
-                        <td><span class="badge blue"><i class="ti ti-book-open"></i> Dipinjam</span></td>
                     </tr>
+                    {% else %}
                     <tr>
-                        <td class="row-num">03</td>
-                        <td>
-                            <div class="book-cell">
-                                <div class="book-thumb" style="background:#ede9fe;color:#5b21b6">84</div>
-                                <span class="book-name">1984</span>
-                            </div>
-                        </td>
-                        <td>Rizky Pratama</td>
-                        <td class="date-text">12 Jun 2025</td>
-                        <td><span class="badge green"><i class="ti ti-check"></i> Kembali</span></td>
+                        <td colspan="5" style="text-align:center;">Belum ada data buku</td>
                     </tr>
-                    <tr>
-                        <td class="row-num">04</td>
-                        <td>
-                            <div class="book-cell">
-                                <div class="book-thumb" style="background:#fef3c7;color:#92400e">SP</div>
-                                <span class="book-name">Sapiens</span>
-                            </div>
-                        </td>
-                        <td>Dewi Lestari</td>
-                        <td class="date-text">11 Jun 2025</td>
-                        <td><span class="badge amber"><i class="ti ti-clock"></i> Terlambat</span></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -182,32 +170,21 @@
                 <div class="card-header">
                     <h3>Buku Terpopuler</h3>
                 </div>
+
                 <div class="popular-list">
+                    {% for b in buku[:5] %}
                     <div class="popular-item">
-                        <div class="rank-badge top">1</div>
-                        <div class="popular-title">Atomic Habits</div>
-                        <div class="popular-count">48×</div>
+                        <div class="rank-badge {% if loop.index <= 2 %}top{% endif %}">
+                            {{ loop.index }}
+                        </div>
+                        <div class="popular-title">{{ b[1] }}</div>
+                        <div class="popular-count">{{ b[12] }} stok</div>
                     </div>
+                    {% else %}
                     <div class="popular-item">
-                        <div class="rank-badge top">2</div>
-                        <div class="popular-title">Laut Bercerita</div>
-                        <div class="popular-count">41×</div>
+                        <div class="popular-title">Belum ada data buku</div>
                     </div>
-                    <div class="popular-item">
-                        <div class="rank-badge">3</div>
-                        <div class="popular-title">Sapiens</div>
-                        <div class="popular-count">35×</div>
-                    </div>
-                    <div class="popular-item">
-                        <div class="rank-badge">4</div>
-                        <div class="popular-title">1984</div>
-                        <div class="popular-count">29×</div>
-                    </div>
-                    <div class="popular-item">
-                        <div class="rank-badge">5</div>
-                        <div class="popular-title">Psychology of Money</div>
-                        <div class="popular-count">24×</div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -215,34 +192,26 @@
                 <div class="card-header">
                     <h3>Aktivitas Terbaru</h3>
                 </div>
+
                 <div class="activity-list">
+                    {% for b in buku[:3] %}
                     <div class="activity-item">
                         <div class="act-icon" style="background:#eff6ff;color:#2563eb">
                             <i class="ti ti-book-plus"></i>
                         </div>
                         <div>
-                            <div class="act-title">Buku baru ditambahkan</div>
-                            <div class="act-time">2 menit lalu</div>
+                            <div class="act-title">Buku "{{ b[1] }}" tersedia</div>
+                            <div class="act-time">Stok: {{ b[12] }}</div>
                         </div>
                     </div>
+                    {% else %}
                     <div class="activity-item">
-                        <div class="act-icon" style="background:#f0fdf4;color:#16a34a">
-                            <i class="ti ti-user-plus"></i>
-                        </div>
                         <div>
-                            <div class="act-title">Anggota baru bergabung</div>
-                            <div class="act-time">18 menit lalu</div>
+                            <div class="act-title">Belum ada aktivitas</div>
+                            <div class="act-time">Data buku masih kosong</div>
                         </div>
                     </div>
-                    <div class="activity-item">
-                        <div class="act-icon" style="background:#fff7ed;color:#ea580c">
-                            <i class="ti ti-arrow-left-right"></i>
-                        </div>
-                        <div>
-                            <div class="act-title">Peminjaman baru tercatat</div>
-                            <div class="act-time">45 menit lalu</div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -351,7 +320,6 @@ new Chart(document.getElementById('pieChart'), {
     }
 });
 
-// Chart tab switcher
 document.querySelectorAll('.chart-tab').forEach(tab => {
     tab.addEventListener('click', function() {
         this.closest('.chart-tabs').querySelectorAll('.chart-tab')

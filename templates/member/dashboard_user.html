@@ -20,6 +20,7 @@
                     name="q"
                     placeholder="Cari buku, penulis, kategori...">
             </form>
+
             <div class="profile-pill">
                 <img src="https://ui-avatars.com/api/?name={{ nama }}&background=6366f1&color=fff&bold=true" alt="{{ nama }}">
                 <div>
@@ -41,6 +42,7 @@
                 <p class="stat-chip-label">Sedang Dipinjam</p>
             </div>
         </div>
+
         <div class="stat-chip">
             <div class="stat-chip-icon stat-chip-icon--amber">
                 <i class="fa-solid fa-clock-rotate-left"></i>
@@ -56,25 +58,35 @@
 
         <section class="left-content">
 
+            <!-- BUKU POPULER -->
             <div class="book-section">
                 <div class="section-title">
                     <div>
                         <span class="section-eyebrow">Trending</span>
                         <h2>Buku Populer</h2>
                     </div>
-                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/daftar_buku" class="see-all-link">
+                        Lihat semua <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
+
                 <div class="book-list">
                     {% for b in buku[:5] %}
                     <div class="book-card">
                         <div class="book-cover-wrap">
-                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <img 
+                                src="{{ b[10] if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}"
+                                alt="{{ b[1] }}"
+                                onerror="this.onerror=null; this.src='https://via.placeholder.com/180x260?text=No+Cover';"
+                            >
+
                             <div class="book-hover-overlay">
                                 <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
                                     <i class="fa-solid fa-eye"></i> Detail
                                 </a>
                             </div>
                         </div>
+
                         <div class="book-info">
                             <span class="book-genre">{{ b[7] }}</span>
                             <h4>{{ b[1] }}</h4>
@@ -85,25 +97,35 @@
                 </div>
             </div>
 
+            <!-- BUKU TERBARU -->
             <div class="book-section">
                 <div class="section-title">
                     <div>
                         <span class="section-eyebrow">Baru Masuk</span>
                         <h2>Buku Terbaru</h2>
                     </div>
-                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/daftar_buku" class="see-all-link">
+                        Lihat semua <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
+
                 <div class="book-list">
                     {% for b in buku[:5] %}
                     <div class="book-card">
                         <div class="book-cover-wrap">
-                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <img 
+                                src="{{ b[10] if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}"
+                                alt="{{ b[1] }}"
+                                onerror="this.onerror=null; this.src='https://via.placeholder.com/180x260?text=No+Cover';"
+                            >
+
                             <div class="book-hover-overlay">
                                 <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
                                     <i class="fa-solid fa-eye"></i> Detail
                                 </a>
                             </div>
                         </div>
+
                         <div class="book-info">
                             <span class="book-genre">{{ b[7] }}</span>
                             <h4>{{ b[1] }}</h4>
@@ -114,25 +136,35 @@
                 </div>
             </div>
 
+            <!-- SEMUA KOLEKSI -->
             <div class="book-section">
                 <div class="section-title">
                     <div>
                         <span class="section-eyebrow">Semua Koleksi</span>
                         <h2>Kumpulan Buku</h2>
                     </div>
-                    <a href="#" class="see-all-link">Lihat semua <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/daftar_buku" class="see-all-link">
+                        Lihat semua <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
+
                 <div class="book-list">
                     {% for b in buku[:5] %}
                     <div class="book-card">
                         <div class="book-cover-wrap">
-                            <img src="{{ url_for('static', filename='images/books/' + b[10]) if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}" alt="{{ b[1] }}">
+                            <img 
+                                src="{{ b[10] if b[10] else 'https://via.placeholder.com/180x260?text=No+Cover' }}"
+                                alt="{{ b[1] }}"
+                                onerror="this.onerror=null; this.src='https://via.placeholder.com/180x260?text=No+Cover';"
+                            >
+
                             <div class="book-hover-overlay">
                                 <a href="{{ url_for('detail_buku', id=b[0]) }}" class="book-detail-btn">
                                     <i class="fa-solid fa-eye"></i> Detail
                                 </a>
                             </div>
                         </div>
+
                         <div class="book-info">
                             <span class="book-genre">{{ b[7] }}</span>
                             <h4>{{ b[1] }}</h4>
@@ -152,19 +184,21 @@
                     <i class="fa-regular fa-calendar-check"></i>
                     <h3>Ringkasan Peminjaman</h3>
                 </div>
+
                 <div class="summary-list">
                     <div class="summary-item">
                         <div class="summary-dot summary-dot--blue"></div>
                         <span>Buku Dipinjam</span>
                         <b class="summary-val--blue">2</b>
                     </div>
+
                     <div class="summary-item">
                         <div class="summary-dot summary-dot--red"></div>
                         <span>Buku Terlambat</span>
                         <b class="summary-val--red">0</b>
                     </div>
-                    
                 </div>
+
                 <a href="/riwayat" class="btn-history">
                     <i class="fa-solid fa-list"></i> Lihat Riwayat Lengkap
                 </a>
@@ -180,29 +214,34 @@
                 <div class="side-card-header">
                     <i class="fa-solid fa-tag"></i>
                     <h3>Kategori Buku</h3>
-                    <a href="#" class="header-link">Semua →</a>
+                    <a href="/daftar_buku" class="header-link">Semua →</a>
                 </div>
+
                 <div class="category-list">
                     <a href="#" class="category-item">
                         <div class="category-dot" style="background:#6366f1"></div>
                         <span class="category-name">Fiksi</span>
                         <span class="category-count">128</span>
                     </a>
+
                     <a href="#" class="category-item">
                         <div class="category-dot" style="background:#f59e0b"></div>
                         <span class="category-name">Non Fiksi</span>
                         <span class="category-count">96</span>
                     </a>
+
                     <a href="#" class="category-item">
                         <div class="category-dot" style="background:#10b981"></div>
                         <span class="category-name">Pengembangan Diri</span>
                         <span class="category-count">74</span>
                     </a>
+
                     <a href="#" class="category-item">
                         <div class="category-dot" style="background:#ef4444"></div>
                         <span class="category-name">Sejarah</span>
                         <span class="category-count">45</span>
                     </a>
+
                     <a href="#" class="category-item">
                         <div class="category-dot" style="background:#3b82f6"></div>
                         <span class="category-name">Sains & Teknologi</span>
