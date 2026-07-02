@@ -57,7 +57,11 @@
                     <div class="ai-book-card">
                         <div class="ai-book-cover">
                             {% if buku[10] %}
-                                <img src="{{ r[3] }}" alt="{{ buku[1] }}">
+                            <img 
+                                src="{{ buku[10] }}" 
+                                alt="{{ buku[1] }}"
+                                onerror="this.onerror=null; this.src='https://via.placeholder.com/180x260?text=No+Cover';"
+                            >
                             {% else %}
                                 {{ loop.index }}
                             {% endif %}
