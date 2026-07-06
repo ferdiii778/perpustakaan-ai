@@ -1419,6 +1419,17 @@ def proses_rekomendasi_ai():
 
     query_asli = request.form.get('query', '').strip().lower()
 
+    stopwords = [
+        'saya', 'aku', 'ingin', 'mau', 'baca', 'membaca',
+        'buku', 'tentang', 'yang', 'dong', 'tolong', 'carikan',
+        'rekomendasi', 'untuk', 'dengan', 'dan', 'atau'
+    ]
+
+    query_words = [
+        w for w in query_asli.replace(',', ' ').replace('.', ' ').split()
+        if w not in stopwords
+    ]
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -1428,22 +1439,48 @@ def proses_rekomendasi_ai():
     hasil = []
 
     for b in semua_buku:
-        teks_buku = f"""
-        {b[1]} {b[2]} {b[7]} {b[8]} {b[9]} {b[15]}
-        """.lower()
+        judul = str(b[1] or '').lower()
+        penulis = str(b[2] or '').lower()
+        kategori = str(b[7] or '').lower()
+        genre = str(b[8] or '').lower()
+        deskripsi = str(b[9] or '').lower()
+        tags = str(b[15] or '').lower()
+
+        teks_buku = f"{judul} {penulis} {kategori} {genre} {deskripsi} {tags}"
 
         score = 0
-        query_words = query_asli.split()
 
         for w in query_words:
-            if w in teks_buku:
+            if w == kategori:
+                score += 10
+            elif w == genre:
+                score += 8
+            elif w in judul:
+                score += 5
+            elif w in tags:
+                score += 4
+            elif w in deskripsi:
+                score += 2
+            elif w in teks_buku:
                 score += 1
+
+        # Prioritas khusus kalau user minta fiksi / non fiksi
+        if 'fiksi' in query_words:
+            if kategori == 'fiksi' or genre == 'fiksi':
+                score += 20
+            elif kategori == 'non fiksi' or genre == 'non fiksi':
+                score -= 15
+
+        if 'non' in query_words and 'fiksi' in query_words:
+            if kategori == 'non fiksi' or genre == 'non fiksi':
+                score += 20
+            elif kategori == 'fiksi' or genre == 'fiksi':
+                score -= 15
 
         if score > 0:
             hasil.append((score, b))
 
     hasil.sort(key=lambda x: x[0], reverse=True)
-
     rekomendasi = [x[1] for x in hasil[:5]]
 
     cursor.close()
